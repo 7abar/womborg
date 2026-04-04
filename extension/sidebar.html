@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WombDAO Research Assistant</title>
+  <link rel="stylesheet" href="sidebar.css">
+</head>
+<body>
+  <div class="sidebar-container">
+    <!-- Header -->
+    <div class="sidebar-header">
+      <div class="header-left">
+        <svg class="dna-icon" width="28" height="28" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+          <path d="M15 4 Q24 10 33 4 Q24 16 15 16 Q24 22 33 22 Q24 34 15 28 Q24 40 33 44" 
+                stroke="#00ff88" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <path d="M33 4 Q24 10 15 4 Q24 16 33 16 Q24 22 15 22 Q24 34 33 28 Q24 40 15 44" 
+                stroke="#00ccff" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.7"/>
+          <circle cx="24" cy="12" r="2" fill="#00ff88"/>
+          <circle cx="24" cy="24" r="2" fill="#00ff88"/>
+          <circle cx="24" cy="36" r="2" fill="#00ff88"/>
+        </svg>
+        <div class="header-title-area">
+          <span class="header-title">WombDAO</span>
+          <span class="header-subtitle">Research Assistant</span>
+        </div>
+      </div>
+      <div class="header-right">
+        <div class="network-badge">
+          <span class="badge-dot"></span>
+          Base Mainnet
+        </div>
+        <div class="wallet-chip" id="walletChip">
+          <span id="walletDisplay">Not connected</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab Navigation -->
+    <div class="tab-nav">
+      <button class="tab-btn active" data-tab="research">🧬 Research</button>
+      <button class="tab-btn" data-tab="chat">💬 AI Chat</button>
+      <button class="tab-btn" data-tab="dao">🗳️ DAO</button>
+      <button class="tab-btn" data-tab="settings">⚙️ Settings</button>
+    </div>
+
+    <!-- Tab Content -->
+    <div class="tab-content">
+      <!-- ====== RESEARCH TAB ====== -->
+      <div class="tab-pane active" id="tab-research">
+        <div class="search-area">
+          <div class="search-box">
+            <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
+            </svg>
+            <input type="text" class="search-input" id="ncbiSearch" placeholder="Search NCBI datasets...">
+            <button class="search-btn" id="searchBtn">Search</button>
+          </div>
+        </div>
+
+        <!-- Search Results -->
+        <div id="searchResults" class="hidden">
+          <div class="section-header">
+            <span class="section-title">Search Results</span>
+            <span class="result-count" id="resultCount">0 datasets</span>
+          </div>
+          <div class="loading-indicator" id="searchLoading" style="display:none;">
+            <div class="loading-dots"><span></span><span></span><span></span></div>
+            <span>Querying NCBI...</span>
+          </div>
+          <div id="searchResultsList" class="dataset-list"></div>
+        </div>
+
+        <!-- Featured Datasets -->
+        <div class="section-header">
+          <span class="section-title">⭐ Featured Datasets</span>
+          <span class="section-badge">GEO</span>
+        </div>
+        <div class="dataset-list" id="featuredDatasets">
+          <div class="dataset-card">
+            <div class="dataset-header">
+              <span class="dataset-accession">GSE36552</span>
+              <span class="dataset-type">RNA-seq</span>
+            </div>
+            <div class="dataset-title">Single-cell RNA-seq of human preimplantation embryos</div>
+            <div class="dataset-meta">
+              <span class="meta-item">🧫 Homo sapiens</span>
+              <span class="meta-item">📊 Individual cells</span>
+            </div>
+            <div class="dataset-actions">
+              <a class="dataset-link" href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE36552" target="_blank">View on GEO</a>
+              <button class="analyze-btn" data-geo="GSE36552" data-title="Single-cell RNA-seq of human preimplantation embryos">Analyze with AI</button>
+            </div>
+          </div>
+
+          <div class="dataset-card">
+            <div class="dataset-header">
+              <span class="dataset-accession">GSE44183</span>
+              <span class="dataset-type">Transcriptome</span>
+            </div>
+            <div class="dataset-title">Human preimplantation embryo transcriptome analysis</div>
+            <div class="dataset-meta">
+              <span class="meta-item">🧫 Homo sapiens</span>
+              <span class="meta-item">📊 Bulk RNA-seq</span>
+            </div>
+            <div class="dataset-actions">
+              <a class="dataset-link" href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE44183" target="_blank">View on GEO</a>
+              <button class="analyze-btn" data-geo="GSE44183" data-title="Human preimplantation embryo transcriptome">Analyze with AI</button>
+            </div>
+          </div>
+
+          <div class="dataset-card">
+            <div class="dataset-header">
+              <span class="dataset-accession">GSE101571</span>
+              <span class="dataset-type">scRNA-seq</span>
+            </div>
+            <div class="dataset-title">Single-cell RNA sequencing of early human embryos</div>
+            <div class="dataset-meta">
+              <span class="meta-item">🧫 Homo sapiens</span>
+              <span class="meta-item">📊 Single cell</span>
+            </div>
+            <div class="dataset-actions">
+              <a class="dataset-link" href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE101571" target="_blank">View on GEO</a>
+              <button class="analyze-btn" data-geo="GSE101571" data-title="Single-cell RNA sequencing of early human embryos">Analyze with AI</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Live NCBI Results -->
+        <div class="section-header" style="margin-top: 16px;">
+          <span class="section-title">🔬 Live NCBI Data</span>
+          <button class="refresh-btn" id="refreshNCBI">↻ Refresh</button>
+        </div>
+        <div class="loading-indicator" id="ncbiLoading">
+          <div class="loading-dots"><span></span><span></span><span></span></div>
+          <span>Fetching NCBI datasets...</span>
+        </div>
+        <div id="ncbiResults" class="dataset-list"></div>
+      </div>
+
+      <!-- ====== AI CHAT TAB ====== -->
+      <div class="tab-pane" id="tab-chat">
+        <div class="chat-header">
+          <div class="model-selector-area">
+            <label class="model-label">Model:</label>
+            <select class="model-select" id="modelSelect">
+              <option value="meta-llama/llama-3.1-8b-instruct:free">Llama 3.1 8B (Free)</option>
+              <option value="mistralai/mistral-7b-instruct:free">Mistral 7B (Free)</option>
+              <option value="google/gemma-2-9b-it:free">Gemma 2 9B (Free)</option>
+            </select>
+          </div>
+          <button class="clear-chat-btn" id="clearChatBtn" title="Clear chat">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+            </svg>
+          </button>
+        </div>
+
+        <!-- No API Key Warning -->
+        <div class="no-key-warning" id="noKeyWarning" style="display:none;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffaa00" stroke-width="2">
+            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+            <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+          </svg>
+          <div>
+            <div class="warning-title">OpenRouter API Key Required</div>
+            <div class="warning-text">Set your API key in <strong>⚙️ Settings</strong> to enable AI chat.</div>
+          </div>
+        </div>
+
+        <!-- Quick Prompts -->
+        <div class="quick-prompts" id="quickPrompts">
+          <div class="quick-prompts-label">Quick prompts:</div>
+          <div class="quick-prompts-grid">
+            <button class="quick-prompt-btn" data-prompt="Analyze embryo development stages and their significance for ectogenesis research">Analyze embryo development stages</button>
+            <button class="quick-prompt-btn" data-prompt="What is RNA sequencing and how is it used in preimplantation embryo research?">What is RNA sequencing?</button>
+            <button class="quick-prompt-btn" data-prompt="Explain the current progress and challenges in ectogenesis research">Explain ectogenesis progress</button>
+            <button class="quick-prompt-btn" data-prompt="Propose improvements to artificial womb designs based on current bioengineering literature">Propose womb improvement</button>
+          </div>
+        </div>
+
+        <!-- Messages -->
+        <div class="chat-messages" id="chatMessages">
+          <div class="welcome-message">
+            <div class="welcome-icon">🧬</div>
+            <div class="welcome-text">WombDAO AI Research Agent</div>
+            <div class="welcome-sub">Specialized in ectogenesis, embryo development & synthetic biology</div>
+          </div>
+        </div>
+
+        <!-- Typing Indicator -->
+        <div class="typing-indicator" id="typingIndicator" style="display:none;">
+          <div class="typing-dots"><span></span><span></span><span></span></div>
+          <span>AI is thinking...</span>
+        </div>
+
+        <!-- Input Area -->
+        <div class="chat-input-area">
+          <textarea class="chat-input" id="chatInput" placeholder="Ask about ectogenesis, embryo development, RNA-seq..." rows="2"></textarea>
+          <button class="send-btn" id="sendBtn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- ====== DAO TAB ====== -->
+      <div class="tab-pane" id="tab-dao">
+        <div class="dao-header">
+          <div class="dao-treasury">
+            <div class="treasury-label">$WOMB Treasury</div>
+            <div class="treasury-amount" id="treasuryAmount">
+              <div class="loading-dots"><span></span><span></span><span></span></div>
+            </div>
+          </div>
+          <div class="dao-stats">
+            <div class="dao-stat">
+              <span class="stat-val">3</span>
+              <span class="stat-label">Active</span>
+            </div>
+            <div class="dao-stat">
+              <span class="stat-val">12</span>
+              <span class="stat-label">Passed</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="proposals-label">Active Proposals</div>
+
+        <div class="proposals-list">
+          <!-- Proposal 1 -->
+          <div class="proposal-card">
+            <div class="proposal-id">PROP-001</div>
+            <div class="proposal-title">Increase simulation resolution to cellular level</div>
+            <div class="proposal-meta">
+              <span class="proposal-status status-active">● Active</span>
+              <span class="proposal-deadline">Ends in 3 days</span>
+            </div>
+            <div class="vote-results">
+              <div class="vote-bar-wrap">
+                <div class="vote-label-row">
+                  <span class="vote-yes-label">Yes 67%</span>
+                  <span class="vote-no-label">No 33%</span>
+                </div>
+                <div class="vote-bar">
+                  <div class="vote-bar-fill yes" style="width: 67%"></div>
+                </div>
+              </div>
+              <div class="vote-counts">
+                <span>1,340 votes</span>
+              </div>
+            </div>
+            <div class="proposal-actions" id="voteArea1">
+              <button class="vote-yes-btn" data-proposal="1">👍 Vote Yes</button>
+              <button class="vote-no-btn" data-proposal="1">👎 Vote No</button>
+            </div>
+          </div>
+
+          <!-- Proposal 2 -->
+          <div class="proposal-card">
+            <div class="proposal-id">PROP-002</div>
+            <div class="proposal-title">Fund RNA-seq dataset expansion — 2M reads</div>
+            <div class="proposal-meta">
+              <span class="proposal-status status-active">● Active</span>
+              <span class="proposal-deadline">Ends in 5 days</span>
+            </div>
+            <div class="vote-results">
+              <div class="vote-bar-wrap">
+                <div class="vote-label-row">
+                  <span class="vote-yes-label">Yes 45%</span>
+                  <span class="vote-no-label">No 55%</span>
+                </div>
+                <div class="vote-bar">
+                  <div class="vote-bar-fill yes" style="width: 45%"></div>
+                </div>
+              </div>
+              <div class="vote-counts">
+                <span>890 votes</span>
+              </div>
+            </div>
+            <div class="proposal-actions" id="voteArea2">
+              <button class="vote-yes-btn" data-proposal="2">👍 Vote Yes</button>
+              <button class="vote-no-btn" data-proposal="2">👎 Vote No</button>
+            </div>
+          </div>
+
+          <!-- Proposal 3 -->
+          <div class="proposal-card">
+            <div class="proposal-id">PROP-003</div>
+            <div class="proposal-title">Deploy v2 artificial womb simulation protocol</div>
+            <div class="proposal-meta">
+              <span class="proposal-status status-active">● Active</span>
+              <span class="proposal-deadline">Ends in 1 day</span>
+            </div>
+            <div class="vote-results">
+              <div class="vote-bar-wrap">
+                <div class="vote-label-row">
+                  <span class="vote-yes-label">Yes 89%</span>
+                  <span class="vote-no-label">No 11%</span>
+                </div>
+                <div class="vote-bar">
+                  <div class="vote-bar-fill yes" style="width: 89%"></div>
+                </div>
+              </div>
+              <div class="vote-counts">
+                <span>2,100 votes</span>
+              </div>
+            </div>
+            <div class="proposal-actions" id="voteArea3">
+              <button class="vote-yes-btn" data-proposal="3">👍 Vote Yes</button>
+              <button class="vote-no-btn" data-proposal="3">👎 Vote No</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="no-wallet-dao" id="noWalletDao" style="display:none;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffaa00" stroke-width="2">
+            <path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/><path d="M18 12a2 2 0 0 0 0 4h4v-4z"/>
+          </svg>
+          <span>Connect wallet to vote on proposals</span>
+        </div>
+      </div>
+
+      <!-- ====== SETTINGS TAB ====== -->
+      <div class="tab-pane" id="tab-settings">
+        <div class="settings-section">
+          <div class="settings-section-title">🤖 AI Configuration</div>
+          
+          <div class="settings-field">
+            <label class="settings-label">OpenRouter API Key</label>
+            <div class="api-key-input-wrap">
+              <input type="password" class="settings-input" id="apiKeyInput" placeholder="sk-or-v1-...">
+              <button class="toggle-visibility-btn" id="toggleApiKey">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+                </svg>
+              </button>
+            </div>
+            <button class="save-btn" id="saveApiKey">Save API Key</button>
+            <div class="settings-hint">Get a free key at <span class="settings-link-text">openrouter.ai</span></div>
+          </div>
+
+          <div class="settings-field">
+            <label class="settings-label">Default Model</label>
+            <select class="settings-input" id="defaultModel">
+              <option value="meta-llama/llama-3.1-8b-instruct:free">Llama 3.1 8B (Free)</option>
+              <option value="mistralai/mistral-7b-instruct:free">Mistral 7B (Free)</option>
+              <option value="google/gemma-2-9b-it:free">Gemma 2 9B (Free)</option>
+            </select>
+            <button class="save-btn" id="saveModel">Save Preference</button>
+          </div>
+        </div>
+
+        <div class="settings-section">
+          <div class="settings-section-title">👛 Wallet</div>
+          <div class="settings-field">
+            <label class="settings-label">Connected Address</label>
+            <div class="wallet-display" id="walletDisplaySettings">Not connected</div>
+          </div>
+        </div>
+
+        <div class="settings-section">
+          <div class="settings-section-title">🎨 Theme</div>
+          <div class="settings-field">
+            <div class="theme-toggle-row">
+              <span class="settings-label">Theme Mode</span>
+              <div class="theme-toggle" id="themeToggle">
+                <button class="theme-btn active" data-theme="dark">Dark</button>
+                <button class="theme-btn" data-theme="darker">Darker</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="settings-section">
+          <div class="settings-section-title">📊 Data</div>
+          <div class="settings-actions">
+            <button class="danger-btn" id="clearChatHistory">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/>
+              </svg>
+              Clear Chat History
+            </button>
+            <button class="secondary-btn" id="exportData">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+              </svg>
+              Export Chat History
+            </button>
+          </div>
+        </div>
+
+        <div class="settings-section">
+          <div class="settings-section-title">ℹ️ About</div>
+          <div class="about-info">
+            <div class="about-row">
+              <span class="about-label">Version</span>
+              <span class="about-val mono">0.1.0</span>
+            </div>
+            <div class="about-row">
+              <span class="about-label">Twitter</span>
+              <a class="about-link" href="https://twitter.com/womb_dao" target="_blank">@womb_dao</a>
+            </div>
+            <div class="about-row">
+              <span class="about-label">GitHub</span>
+              <a class="about-link" href="https://github.com/womborg" target="_blank">github.com/womborg</a>
+            </div>
+            <div class="about-row">
+              <span class="about-label">Network</span>
+              <span class="about-val mono">Base Mainnet (Chain ID: 8453)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="sidebar.js"></script>
+</body>
+</html>

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WombDAO Research Assistant</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="popup-container">
+    <!-- Header -->
+    <div class="header">
+      <div class="logo-area">
+        <svg class="dna-icon" width="36" height="36" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+          <path d="M15 4 Q24 10 33 4 Q24 16 15 16 Q24 22 33 22 Q24 34 15 28 Q24 40 33 44" 
+                stroke="#00ff88" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <path d="M33 4 Q24 10 15 4 Q24 16 33 16 Q24 22 15 22 Q24 34 33 28 Q24 40 15 44" 
+                stroke="#00ccff" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.7"/>
+          <circle cx="24" cy="12" r="2" fill="#00ff88"/>
+          <circle cx="24" cy="24" r="2" fill="#00ff88"/>
+          <circle cx="24" cy="36" r="2" fill="#00ff88"/>
+        </svg>
+        <div class="logo-text">
+          <span class="logo-title">WombDAO</span>
+          <span class="logo-sub">Research Assistant</span>
+        </div>
+      </div>
+      <div class="network-badge">
+        <span class="badge-dot"></span>
+        Base
+      </div>
+    </div>
+
+    <!-- Wallet Section -->
+    <div class="wallet-section" id="walletSection">
+      <div class="wallet-info" id="walletInfo" style="display:none;">
+        <div class="wallet-address" id="walletAddress">0x0000...0000</div>
+        <div class="wallet-balance">
+          <span class="balance-amount" id="wombBalance">0</span>
+          <span class="balance-token">$WOMB</span>
+        </div>
+      </div>
+      <button class="connect-btn" id="connectBtn">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/>
+          <path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/>
+          <path d="M18 12a2 2 0 0 0 0 4h4v-4z"/>
+        </svg>
+        Connect Wallet
+      </button>
+    </div>
+
+    <!-- Open Sidebar Button -->
+    <button class="open-sidebar-btn" id="openSidebarBtn">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="3" y="3" width="18" height="18" rx="2"/>
+        <path d="M9 3v18"/>
+      </svg>
+      Open Research Sidebar
+    </button>
+
+    <!-- Nav Tabs -->
+    <div class="nav-tabs">
+      <button class="tab-btn active" data-tab="research">🧬 Research</button>
+      <button class="tab-btn" data-tab="chat">💬 AI Chat</button>
+      <button class="tab-btn" data-tab="dao">🗳️ DAO</button>
+      <button class="tab-btn" data-tab="settings">⚙️</button>
+    </div>
+
+    <!-- Tab Content -->
+    <div class="tab-content">
+      <!-- Research Tab -->
+      <div class="tab-pane active" id="tab-research">
+        <div class="section-label">Recent Activity</div>
+        <div class="activity-feed" id="activityFeed">
+          <div class="activity-item">
+            <span class="activity-icon">🧬</span>
+            <span class="activity-text">No recent activity</span>
+            <span class="activity-time">--</span>
+          </div>
+        </div>
+        <div class="quick-links">
+          <a class="quick-link" href="#" id="ncbiLink">📊 NCBI Datasets</a>
+          <a class="quick-link" href="#" id="pubmedLink">📄 PubMed Search</a>
+        </div>
+      </div>
+
+      <!-- Chat Tab -->
+      <div class="tab-pane" id="tab-chat">
+        <div class="mini-chat-preview">
+          <div class="chat-status" id="chatStatus">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="#00ff88"><circle cx="12" cy="12" r="10"/></svg>
+            AI Agent Ready
+          </div>
+          <p class="chat-hint">Open sidebar for full AI chat experience</p>
+        </div>
+      </div>
+
+      <!-- DAO Tab -->
+      <div class="tab-pane" id="tab-dao">
+        <div class="dao-mini">
+          <div class="proposal-mini">
+            <span class="proposal-mini-title">Active Proposals</span>
+            <span class="proposal-count">3</span>
+          </div>
+          <div class="treasury-mini">
+            <span>$WOMB Treasury</span>
+            <span class="treasury-val" id="treasuryMini">Loading...</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Settings Tab -->
+      <div class="tab-pane" id="tab-settings">
+        <div class="settings-mini">
+          <a class="settings-link" id="openSettingsPage">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="3"/>
+              <path d="M19.07 4.93l-1.41 1.41M4.93 4.93l1.41 1.41M12 2v2M12 20v2M2 12h2M20 12h2M19.07 19.07l-1.41-1.41M4.93 19.07l1.41-1.41"/>
+            </svg>
+            Open Full Settings
+          </a>
+          <div class="version-info">v0.1.0 · WombDAO Research Assistant</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>

@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#0d1f0d"/>
+      <stop offset="100%" stop-color="#0a0f0a"/>
+    </radialGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <rect width="128" height="128" rx="20" fill="url(#bg)"/>
+  <rect width="128" height="128" rx="20" fill="none" stroke="#00ff88" stroke-width="2" opacity="0.3"/>
+  <!-- DNA Helix Strand 1 -->
+  <path d="M40 10 Q64 22 88 10 Q64 34 40 34 Q64 46 88 46 Q64 70 40 58 Q64 82 88 82 Q64 106 40 94 Q64 118 88 118" 
+        stroke="#00ff88" stroke-width="4" fill="none" stroke-linecap="round" filter="url(#glow)"/>
+  <!-- DNA Helix Strand 2 -->
+  <path d="M88 10 Q64 22 40 10 Q64 34 88 34 Q64 46 40 46 Q64 70 88 58 Q64 82 40 82 Q64 106 88 94 Q64 118 40 118" 
+        stroke="#00ccff" stroke-width="4" fill="none" stroke-linecap="round" opacity="0.8"/>
+  <!-- Base pairs -->
+  <line x1="40" y1="34" x2="88" y2="34" stroke="#00ff88" stroke-width="1.5" opacity="0.4"/>
+  <line x1="40" y1="46" x2="88" y2="46" stroke="#00ff88" stroke-width="1.5" opacity="0.4"/>
+  <line x1="40" y1="58" x2="88" y2="58" stroke="#00ff88" stroke-width="1.5" opacity="0.4"/>
+  <line x1="40" y1="82" x2="88" y2="82" stroke="#00ff88" stroke-width="1.5" opacity="0.4"/>
+  <line x1="40" y1="94" x2="88" y2="94" stroke="#00ff88" stroke-width="1.5" opacity="0.4"/>
+  <!-- Center nodes -->
+  <circle cx="64" cy="22" r="3.5" fill="#00ff88" filter="url(#glow)"/>
+  <circle cx="64" cy="46" r="3.5" fill="#00ccff" filter="url(#glow)"/>
+  <circle cx="64" cy="70" r="3.5" fill="#00ff88" filter="url(#glow)"/>
+  <circle cx="64" cy="94" r="3.5" fill="#00ccff" filter="url(#glow)"/>
+  <circle cx="64" cy="118" r="3.5" fill="#00ff88" filter="url(#glow)"/>
+</svg>
