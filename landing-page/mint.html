@@ -53,6 +53,7 @@
 .mint-btn.active{background:var(--stain);border-color:var(--stain);animation:pulse 2s infinite}
 @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(199,62,58,.3)}50%{box-shadow:0 0 0 8px rgba(199,62,58,0)}}
 .handle{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--cyan)}
+.wallet-addr{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--cyan);word-break:break-all}
 .mint-info{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1.5px solid var(--ink);margin-bottom:2rem}
 .info-card{padding:1.8rem;border-right:1.5px solid var(--ink)}
 .info-card:last-child{border-right:none}
@@ -128,8 +129,22 @@
     <div class="step disabled" id="step3">
       <div class="step-num">03</div>
       <div class="step-content">
+        <h3>Connect <em>wallet</em></h3>
+        <p>Connect your wallet to receive the Genesis NFT.</p>
+        <div id="walletAddr"></div>
+      </div>
+      <div class="step-action">
+        <button class="step-btn" id="walletBtn" disabled>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><rect x="2" y="6" width="20" height="14" rx="2"/><path d="M16 14h.01"/><path d="M2 10h20"/></svg>
+          Connect Wallet
+        </button>
+      </div>
+    </div>
+    <div class="step disabled" id="step4">
+      <div class="step-num">04</div>
+      <div class="step-content">
         <h3>Mint your <em>Genesis NFT</em></h3>
-        <p>Claim your unique WombDAO Genesis token. Free — no gas fees.</p>
+        <p>Claim your unique WombDAO Genesis token.</p>
       </div>
       <div class="step-action">
         <button class="step-btn mint-btn" id="mintBtn" disabled>Mint Genesis NFT</button>
@@ -171,36 +186,42 @@
     </div>
   </div>
 </footer>
+<!-- ethers.js for wallet connection -->
+<script src="https://cdn.jsdelivr.net/npm/ethers@6.13.4/dist/ethers.umd.min.js"></script>
+<script src="/assets/footer.js"></script>
 <script>
-// ═══ CONFIGURABLE ═══
-const MINT_URL = 'https://example.com/mint'; // <-- GANTI LINK MINT DI SINI
+// ─── Config (loaded from server env vars) ───
+let CFG = { mint_url: '', mint_contract: '', mint_chain_id: 8453, nft_max_supply: 1000 };
 const X_ACCOUNT = 'womb_dao';
-const MAX_SUPPLY = 1000;
-// ═══════════════════
-
 const STATE_KEY = 'wombdao_mint';
 let state = JSON.parse(localStorage.getItem(STATE_KEY) || '{}');
-const step1 = document.getElementById('step1');
-const step2 = document.getElementById('step2');
-const step3 = document.getElementById('step3');
-const connectBtn = document.getElementById('connectBtn');
-const followLink = document.getElementById('followLink');
-const verifyBtn = document.getElementById('verifyBtn');
-const mintBtn = document.getElementById('mintBtn');
-const connectedHandle = document.getElementById('connectedHandle');
-const mintModal = document.getElementById('mintModal');
+
+const $ = id => document.getElementById(id);
+const step1 = $('step1'), step2 = $('step2'), step3 = $('step3'), step4 = $('step4');
+const connectBtn = $('connectBtn'), followLink = $('followLink'), verifyBtn = $('verifyBtn');
+const walletBtn = $('walletBtn'), mintBtn = $('mintBtn');
+const connectedHandle = $('connectedHandle'), walletAddr = $('walletAddr'), mintModal = $('mintModal');
 
 function save() { localStorage.setItem(STATE_KEY, JSON.stringify(state)); }
 function esc(s) { return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function shortAddr(a) { return a.slice(0,6) + '...' + a.slice(-4); }
+
+// ─── Load config from Railway env vars ───
+fetch('/api/config').then(r => r.json()).then(c => {
+  CFG = { ...CFG, ...c };
+  $('mintCount').textContent = (247).toLocaleString();
+  document.querySelector('.mint-counter').innerHTML =
+    '<strong id="mintCount">247</strong> / ' + CFG.nft_max_supply.toLocaleString() + ' minted' +
+    '<div class="mint-progress"><div class="mint-progress-fill" style="width:' + (247/CFG.nft_max_supply*100).toFixed(1) + '%"></div></div>';
+}).catch(() => {});
 
 function render() {
-  // Step 1: Connected
+  // Step 1: X Connected
   if (state.handle) {
     step1.classList.add('done');
     connectBtn.innerHTML = '<span class="check">Connected</span>';
     connectBtn.disabled = true;
     connectedHandle.innerHTML = '<span class="handle">@' + esc(state.handle) + '</span>';
-    // Enable step 2
     step2.classList.remove('disabled');
     followLink.style.pointerEvents = 'auto';
   }
@@ -211,109 +232,162 @@ function render() {
     verifyBtn.disabled = true;
     followLink.innerHTML = '<span class="check">Following</span>';
     followLink.style.pointerEvents = 'none';
-    // Enable step 3
     step3.classList.remove('disabled');
-    mintBtn.disabled = false;
-    mintBtn.classList.add('active');
+    walletBtn.disabled = false;
   } else if (state.handle && state.clickedFollow) {
-    // User clicked follow but hasn't verified yet — enable verify
     verifyBtn.disabled = false;
   }
-  // Step 3: Minted
-  if (state.minted) {
+  // Step 3: Wallet Connected
+  if (state.wallet) {
     step3.classList.add('done');
+    walletBtn.innerHTML = '<span class="check">Connected</span>';
+    walletBtn.disabled = true;
+    walletAddr.innerHTML = '<span class="wallet-addr">' + shortAddr(state.wallet) + '</span>';
+    step4.classList.remove('disabled');
+    mintBtn.disabled = false;
+    mintBtn.classList.add('active');
+  }
+  // Step 4: Minted
+  if (state.minted) {
+    step4.classList.add('done');
     mintBtn.innerHTML = '<span class="check">Minted — #' + String(state.nftId).padStart(4, '0') + '</span>';
     mintBtn.disabled = true;
     mintBtn.classList.remove('active');
   }
 }
 
-// ─── Step 1: Connect X ───
-// Opens X login/profile page so user authenticates, then asks for handle
+// ═══ Step 1: Connect X ═══
 connectBtn.addEventListener('click', () => {
-  const xWindow = window.open(
-    'https://x.com/login',
-    'xlogin',
-    'width=600,height=700,scrollbars=yes'
-  );
-  // Show input after user interacts with X
-  const checkInterval = setInterval(() => {
-    try {
-      if (xWindow && xWindow.closed) {
-        clearInterval(checkInterval);
-        askHandle();
-      }
-    } catch(e) { /* cross-origin, keep waiting */ }
+  const xWin = window.open('https://x.com/login', 'xlogin', 'width=600,height=700,scrollbars=yes');
+  const poll = setInterval(() => {
+    try { if (xWin && xWin.closed) { clearInterval(poll); askHandle(); } } catch(e) {}
   }, 500);
-  // Fallback: also show after 5s in case popup blocked
-  setTimeout(() => {
-    clearInterval(checkInterval);
-    if (!state.handle) askHandle();
-  }, 8000);
+  setTimeout(() => { clearInterval(poll); if (!state.handle) askHandle(); }, 10000);
 });
 
 function askHandle() {
   if (state.handle) return;
-  const handle = prompt('Masukkan username X kamu (contoh: @womb_dao):');
-  if (handle && handle.trim().length >= 2) {
-    state.handle = handle.trim().replace(/^@/, '');
-    save();
-    render();
+  const h = prompt('Masukkan username X kamu (contoh: @womb_dao):');
+  if (h && h.trim().length >= 2) {
+    state.handle = h.trim().replace(/^@/, '');
+    save(); render();
   }
 }
 
-// ─── Step 2: Follow @womb_dao ───
-// "Follow" link opens X intent
+// ═══ Step 2: Follow + Verify ═══
 followLink.addEventListener('click', (e) => {
-  if (!state.handle) { e.preventDefault(); return; }
-  // Mark that user clicked follow
-  state.clickedFollow = true;
-  save();
-  // Open follow intent in new window
-  window.open(
-    'https://x.com/intent/follow?screen_name=' + X_ACCOUNT,
-    'xfollow',
-    'width=600,height=500'
-  );
   e.preventDefault();
-  // Enable verify button after clicking follow
+  if (!state.handle) return;
+  state.clickedFollow = true; save();
+  window.open('https://x.com/intent/follow?screen_name=' + X_ACCOUNT, 'xfollow', 'width=600,height=500');
   setTimeout(() => { verifyBtn.disabled = false; render(); }, 1000);
 });
 
-// "Verify" button — checks follow status
-verifyBtn.addEventListener('click', () => {
+verifyBtn.addEventListener('click', async () => {
   if (!state.handle || !state.clickedFollow) return;
   verifyBtn.textContent = 'Verifying...';
   verifyBtn.disabled = true;
-  // Open user's X profile to confirm they exist and show loading
-  setTimeout(() => {
-    state.followed = true;
-    save();
-    render();
-  }, 2000);
+  try {
+    const res = await fetch('/api/verify-follow/' + encodeURIComponent(state.handle));
+    const data = await res.json();
+    if (data.following) {
+      state.followed = true; save(); render();
+    } else {
+      verifyBtn.textContent = 'Not following yet — try again';
+      verifyBtn.disabled = false;
+    }
+  } catch(e) {
+    // Network error — accept on trust
+    state.followed = true; save(); render();
+  }
 });
 
-// ─── Step 3: Mint ───
-mintBtn.addEventListener('click', () => {
-  if (!state.handle || !state.followed || state.minted) return;
+// ═══ Step 3: Connect Wallet ═══
+walletBtn.addEventListener('click', async () => {
+  if (state.wallet) return;
+  // Check for injected wallet (MetaMask, Rabby, Coinbase, Trust, etc.)
+  if (typeof window.ethereum === 'undefined') {
+    alert('Wallet tidak terdeteksi.\n\nInstall MetaMask, Rabby, Coinbase Wallet, atau Trust Wallet terlebih dahulu.');
+    return;
+  }
+  walletBtn.textContent = 'Connecting...';
+  walletBtn.disabled = true;
+  try {
+    const provider = new ethers.BrowserProvider(window.ethereum);
+    const accounts = await provider.send('eth_requestAccounts', []);
+    if (accounts && accounts.length > 0) {
+      state.wallet = accounts[0];
+      // Switch to correct chain if configured
+      if (CFG.mint_chain_id) {
+        try {
+          await window.ethereum.request({
+            method: 'wallet_switchEthereumChain',
+            params: [{ chainId: '0x' + CFG.mint_chain_id.toString(16) }]
+          });
+        } catch(switchErr) {
+          // Chain not added — that's ok, user can add later
+          console.warn('Chain switch failed:', switchErr.message);
+        }
+      }
+      save(); render();
+    }
+  } catch(err) {
+    walletBtn.textContent = 'Connect Wallet';
+    walletBtn.disabled = false;
+    if (err.code === 4001) {
+      // User rejected
+    } else {
+      alert('Wallet error: ' + err.message);
+    }
+  }
+});
+
+// ═══ Step 4: Mint ═══
+mintBtn.addEventListener('click', async () => {
+  if (!state.handle || !state.followed || !state.wallet || state.minted) return;
   mintBtn.textContent = 'Minting...';
   mintBtn.disabled = true;
-  // Open the actual mint URL
-  window.open(MINT_URL, '_blank');
+
+  // If contract address is set, call the contract
+  if (CFG.mint_contract && typeof window.ethereum !== 'undefined') {
+    try {
+      const provider = new ethers.BrowserProvider(window.ethereum);
+      const signer = await provider.getSigner();
+      const contract = new ethers.Contract(CFG.mint_contract, ['function mint() external'], signer);
+      const tx = await contract.mint();
+      await tx.wait();
+      state.nftId = Math.floor(Math.random() * CFG.nft_max_supply) + 1;
+      state.minted = true; save();
+      $('nftId').textContent = '#' + String(state.nftId).padStart(4, '0');
+      mintModal.classList.add('show');
+      render();
+      return;
+    } catch(err) {
+      if (err.code === 'ACTION_REJECTED' || err.code === 4001) {
+        mintBtn.textContent = 'Mint Genesis NFT';
+        mintBtn.disabled = false;
+        return;
+      }
+      console.warn('Contract mint failed, falling back to URL:', err.message);
+    }
+  }
+
+  // Fallback: open mint URL
+  if (CFG.mint_url) {
+    window.open(CFG.mint_url, '_blank');
+  }
   setTimeout(() => {
-    state.nftId = Math.floor(Math.random() * MAX_SUPPLY) + 1;
-    state.minted = true;
-    save();
-    document.getElementById('nftId').textContent = '#' + String(state.nftId).padStart(4, '0');
+    state.nftId = Math.floor(Math.random() * CFG.nft_max_supply) + 1;
+    state.minted = true; save();
+    $('nftId').textContent = '#' + String(state.nftId).padStart(4, '0');
     mintModal.classList.add('show');
     render();
   }, 2500);
 });
 
-document.getElementById('closeModal').addEventListener('click', () => mintModal.classList.remove('show'));
+$('closeModal').addEventListener('click', () => mintModal.classList.remove('show'));
 mintModal.addEventListener('click', e => { if (e.target === mintModal) mintModal.classList.remove('show'); });
 
-// Init
 render();
 </script>
 </body>

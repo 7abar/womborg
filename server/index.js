@@ -168,6 +168,68 @@ app.get('/api/stats', (req, res) => {
 app.get('/api/openapi.json', (req, res) => res.json(openapiSpec));
 app.get('/health', (req, res) => res.json({ status: 'ok', version: '0.2.0', datasets: DATASETS.length }));
 
+// ─── Public config (env vars exposed to frontend) ───────────────────────────
+app.get('/api/config', (req, res) => {
+  res.json({
+    mint_url: process.env.MINT_URL || '',
+    mint_contract: process.env.MINT_CONTRACT_ADDRESS || '',
+    mint_chain_id: parseInt(process.env.MINT_CHAIN_ID) || 8453,
+    nft_max_supply: parseInt(process.env.NFT_MAX_SUPPLY) || 1000,
+    walletconnect_project_id: process.env.WALLETCONNECT_PROJECT_ID || '',
+    footer: {
+      x: process.env.FOOTER_X_URL || 'https://x.com/womb_dao',
+      github: process.env.FOOTER_GITHUB_URL || 'https://github.com/7abar/womborg',
+      bankr: process.env.FOOTER_BANKR_URL || 'https://bankr.bot',
+      dexscreener: process.env.FOOTER_DEXSCREENER_URL || 'https://dexscreener.com'
+    }
+  });
+});
+
+// ─── Twitter follow verification ─────────────────────────────────────────────
+app.get('/api/verify-follow/:handle', async (req, res) => {
+  const bearerToken = process.env.X_BEARER_TOKEN;
+  const handle = req.params.handle.replace(/^@/, '');
+  const targetAccount = 'womb_dao';
+
+  if (!bearerToken) {
+    // No token configured — accept follow on trust
+    return res.json({ success: true, following: true, mode: 'unverified' });
+  }
+
+  try {
+    // Get source user ID
+    const userRes = await fetchJSON(`https://api.x.com/2/users/by/username/${encodeURIComponent(handle)}`, {
+      headers: { 'Authorization': `Bearer ${bearerToken}` }
+    });
+    const userData = await userRes.json();
+    if (!userData.data?.id) {
+      return res.json({ success: false, following: false, error: 'User not found on X' });
+    }
+
+    // Get target user ID
+    const targetRes = await fetchJSON(`https://api.x.com/2/users/by/username/${targetAccount}`, {
+      headers: { 'Authorization': `Bearer ${bearerToken}` }
+    });
+    const targetData = await targetRes.json();
+    if (!targetData.data?.id) {
+      return res.json({ success: false, following: false, error: 'Target account not found' });
+    }
+
+    // Check if source follows target
+    const followRes = await fetchJSON(`https://api.x.com/2/users/${userData.data.id}/following?max_results=1000`, {
+      headers: { 'Authorization': `Bearer ${bearerToken}` }
+    });
+    const followData = await followRes.json();
+    const isFollowing = (followData.data || []).some(u => u.id === targetData.data.id);
+
+    res.json({ success: true, following: isFollowing });
+  } catch (err) {
+    console.error('X API error:', err.message);
+    // On error, accept on trust rather than blocking
+    res.json({ success: true, following: true, mode: 'fallback' });
+  }
+});
+
 // ─── robots.txt + sitemap.xml ────────────────────────────────────────────────
 app.get('/robots.txt', (req, res) => {
   res.type('text/plain').send(`User-agent: *\nAllow: /\nAllow: /api/\n\nSitemap: ${req.protocol}://${req.get('host')}/sitemap.xml\n`);
