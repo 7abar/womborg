@@ -170,7 +170,7 @@ app.get('/sitemap.xml', (req, res) => {
 });
 
 // ─── Page routes ─────────────────────────────────────────────────────────────
-const pages = ['agent', 'docs', 'connect', 'for-agents'];
+const pages = ['agent', 'docs', 'connect', 'for-agents', 'terms', 'privacy', 'mint'];
 pages.forEach(p => app.get('/' + p, (req, res) => res.sendFile(path.join(landingDir, p + '.html'))));
 
 app.get('*', (req, res) => res.sendFile(path.join(landingDir, 'index.html')));
