@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mint Genesis NFT — WombDAO</title>
+<meta name="description" content="Connect your X account, follow @womb_dao, and mint your free WombDAO Genesis NFT.">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,700;0,900;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/styles.css">
+<style>
+.mint-shell{max-width:800px;margin:0 auto;padding:3rem 2rem 4rem;position:relative;z-index:2}
+.mint-hero{text-align:center;margin-bottom:3rem}
+.mint-overline{font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;color:var(--stain);margin-bottom:1rem;display:flex;align-items:center;justify-content:center;gap:.8rem}
+.mint-overline::before,.mint-overline::after{content:'';width:40px;height:1px;background:var(--rule)}
+.mint-hero h1{font-family:'Fraunces',serif;font-weight:900;font-size:clamp(2rem,5vw,3.2rem);line-height:1;margin-bottom:1.2rem;letter-spacing:-.02em}
+.mint-hero h1 em{font-style:italic;color:var(--stain);font-weight:400}
+.mint-hero p{font-family:'Fraunces',serif;font-size:1.15rem;color:var(--ink-soft);max-width:600px;margin:0 auto;line-height:1.5}
+.mint-counter{text-align:center;margin-bottom:2.5rem;font-family:'JetBrains Mono',monospace;font-size:.82rem;color:var(--ink-soft)}
+.mint-counter strong{color:var(--stain);font-size:1.1rem}
+.mint-progress{width:100%;max-width:400px;height:6px;background:var(--rule);margin:.8rem auto 0}
+.mint-progress-fill{height:100%;background:var(--stain);transition:width .5s}
+.steps{display:flex;flex-direction:column;gap:0;border:1.5px solid var(--ink);margin-bottom:3rem}
+.step{padding:2rem;border-bottom:1.5px solid var(--ink);display:grid;grid-template-columns:50px 1fr auto;gap:1.5rem;align-items:center;transition:opacity .3s}
+.step:last-child{border-bottom:none}
+.step.disabled{opacity:.4;pointer-events:none}
+.step-num{font-family:'JetBrains Mono',monospace;font-size:2rem;font-weight:300;color:var(--rule);line-height:1}
+.step.done .step-num{color:var(--fluor)}
+.step-content h3{font-family:'Fraunces',serif;font-weight:700;font-size:1.3rem;margin-bottom:.4rem}
+.step-content h3 em{font-style:italic;color:var(--stain);font-weight:400}
+.step-content p{font-family:'Fraunces',serif;font-size:.95rem;color:var(--ink-soft);line-height:1.5}
+.step-action{display:flex;flex-direction:column;align-items:flex-end;gap:.5rem}
+.step-btn{display:inline-flex;align-items:center;gap:.5rem;font-family:'JetBrains Mono',monospace;font-size:.75rem;letter-spacing:.06em;text-transform:uppercase;padding:.7rem 1.2rem;border:1.5px solid var(--ink);background:var(--ink);color:var(--paper);cursor:pointer;transition:all .2s;white-space:nowrap}
+.step-btn:hover:not(:disabled){background:var(--stain);border-color:var(--stain);transform:translate(-1px,-1px);box-shadow:2px 2px 0 var(--ink)}
+.step-btn:disabled{opacity:.35;cursor:not-allowed}
+.step-btn.outline{background:transparent;color:var(--ink)}
+.step-btn.outline:hover:not(:disabled){background:var(--ink);color:var(--paper)}
+.step-btn svg{width:16px;height:16px}
+.check{display:inline-flex;align-items:center;gap:.4rem;font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--fluor);letter-spacing:.06em;text-transform:uppercase}
+.check::before{content:'';width:8px;height:8px;border-radius:50%;background:var(--fluor)}
+.mint-btn{width:100%;padding:1.2rem;font-size:.9rem;letter-spacing:.1em}
+.mint-btn.active{background:var(--stain);border-color:var(--stain);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(199,62,58,.3)}50%{box-shadow:0 0 0 8px rgba(199,62,58,0)}}
+.handle{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--cyan)}
+.mint-info{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1.5px solid var(--ink);margin-bottom:2rem}
+.info-card{padding:1.8rem;border-right:1.5px solid var(--ink)}
+.info-card:last-child{border-right:none}
+.info-card h4{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;color:var(--stain);margin-bottom:.8rem}
+.info-card p{font-family:'Fraunces',serif;font-size:.95rem;color:var(--ink-soft);line-height:1.5}
+@media(max-width:700px){.step{grid-template-columns:40px 1fr;gap:1rem}.step-action{grid-column:1/-1;align-items:stretch}.mint-info{grid-template-columns:1fr}.info-card{border-right:none;border-bottom:1.5px solid var(--ink)}.info-card:last-child{border-bottom:none}}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(26,24,22,.7);z-index:100;align-items:center;justify-content:center}
+.modal-overlay.show{display:flex}
+.modal{background:var(--paper);border:2px solid var(--ink);padding:3rem;max-width:450px;text-align:center;box-shadow:8px 8px 0 var(--ink);animation:modalIn .3s}
+@keyframes modalIn{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:scale(1)}}
+.modal h2{font-family:'Fraunces',serif;font-weight:900;font-size:2rem;margin-bottom:.5rem}
+.modal h2 em{color:var(--stain);font-style:italic;font-weight:400}
+.modal .nft-id{font-family:'JetBrains Mono',monospace;font-size:1.8rem;color:var(--stain);margin:1rem 0}
+.modal p{font-family:'Fraunces',serif;color:var(--ink-soft);margin-bottom:1.5rem}
+.modal button{font-family:'JetBrains Mono',monospace;font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;padding:.8rem 2rem;border:1.5px solid var(--ink);background:var(--ink);color:var(--paper);cursor:pointer}
+.modal button:hover{background:var(--stain);border-color:var(--stain)}
+</style>
+</head>
+<body>
+<header class="masthead">
+  <div class="mast-left"><div class="mast-title"><a href="/">WombDAO</a></div></div>
+  <nav class="mast-nav">
+    <a href="/agent">Agent</a><a href="/docs">API Docs</a><a href="/">Datasets</a><a href="/connect">Connect</a><a href="/for-agents">For Agents</a>
+  </nav>
+</header>
+<main class="mint-shell">
+  <div class="mint-hero">
+    <div class="mint-overline">Special Event</div>
+    <h1>Mint Your WombDAO <em>Genesis NFT</em></h1>
+    <p>Connect your X account and follow <strong>@womb_dao</strong> to claim your free Genesis NFT. Limited to early supporters.</p>
+  </div>
+  <div class="mint-counter">
+    <strong id="mintCount">1,247</strong> / 5,000 minted
+    <div class="mint-progress"><div class="mint-progress-fill" id="mintBar" style="width:24.9%"></div></div>
+  </div>
+  <div class="steps">
+    <div class="step" id="step1">
+      <div class="step-num">01</div>
+      <div class="step-content">
+        <h3>Connect your <em>X account</em></h3>
+        <p>Link your X (Twitter) handle to verify eligibility.</p>
+        <div id="connectedHandle"></div>
+      </div>
+      <div class="step-action">
+        <button class="step-btn" id="connectBtn">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          Connect with X
+        </button>
+      </div>
+    </div>
+    <div class="step disabled" id="step2">
+      <div class="step-num">02</div>
+      <div class="step-content">
+        <h3>Follow <em>@womb_dao</em></h3>
+        <p>Follow our X account, then click verify. We'll check your follow status.</p>
+      </div>
+      <div class="step-action">
+        <a href="https://x.com/intent/follow?screen_name=womb_dao" target="_blank" rel="noopener" class="step-btn outline" id="followLink" style="text-decoration:none">Follow @womb_dao</a>
+        <button class="step-btn" id="verifyBtn" disabled>Verify Follow</button>
+      </div>
+    </div>
+    <div class="step disabled" id="step3">
+      <div class="step-num">03</div>
+      <div class="step-content">
+        <h3>Mint your <em>Genesis NFT</em></h3>
+        <p>Claim your unique WombDAO Genesis token. Free — no gas fees.</p>
+      </div>
+      <div class="step-action">
+        <button class="step-btn mint-btn" id="mintBtn" disabled>Mint Genesis NFT</button>
+      </div>
+    </div>
+  </div>
+  <div class="mint-info">
+    <div class="info-card">
+      <h4>What is the Genesis NFT?</h4>
+      <p>A commemorative token for early WombDAO supporters. It grants priority access to future governance votes, dataset submissions, and community events.</p>
+    </div>
+    <div class="info-card">
+      <h4>Why follow?</h4>
+      <p>Following @womb_dao ensures you receive updates on new datasets, proposals, and research milestones. It's how we build the community in the open.</p>
+    </div>
+  </div>
+</main>
+<div class="modal-overlay" id="mintModal">
+  <div class="modal">
+    <h2>Genesis NFT <em>Minted!</em></h2>
+    <div class="nft-id" id="nftId">#0000</div>
+    <p>Your WombDAO Genesis NFT has been claimed. Welcome to the archive.</p>
+    <button id="closeModal">Close</button>
+  </div>
+</div>
+<footer class="site-footer">
+  <div class="site-footer-inner">
+    <div class="footer-icons">
+      <a href="/docs" title="API Docs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></a>
+      <a href="https://x.com/womb_dao" target="_blank" rel="noopener" title="X / Twitter"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+      <a href="https://github.com/7abar/womborg" target="_blank" rel="noopener" title="GitHub"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg></a>
+      <a href="https://bankr.bot" target="_blank" rel="noopener" title="Bankr.bot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a4 4 0 0 0-8 0v2"/><circle cx="12" cy="14" r="2"/></svg></a>
+      <a href="https://dexscreener.com" target="_blank" rel="noopener" title="Dexscreener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/><circle cx="12" cy="12" r="10"/></svg></a>
+    </div>
+    <div class="footer-divider"></div>
+    <div class="footer-bottom">
+      <span>Copyright &copy; 2026 WombDAO</span><br>
+      <a href="/terms">Terms &amp; Conditions</a> &middot; <a href="/privacy">Privacy Policy</a>
+    </div>
+  </div>
+</footer>
+<script>
+const STATE_KEY = 'wombdao_mint';
+let state = JSON.parse(localStorage.getItem(STATE_KEY) || '{}');
+const step1 = document.getElementById('step1');
+const step2 = document.getElementById('step2');
+const step3 = document.getElementById('step3');
+const connectBtn = document.getElementById('connectBtn');
+const verifyBtn = document.getElementById('verifyBtn');
+const mintBtn = document.getElementById('mintBtn');
+const connectedHandle = document.getElementById('connectedHandle');
+const mintModal = document.getElementById('mintModal');
+
+function save() { localStorage.setItem(STATE_KEY, JSON.stringify(state)); }
+function esc(s) { return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+function render() {
+  if (state.handle) {
+    step1.classList.add('done');
+    connectBtn.innerHTML = '<span class="check">Connected</span>';
+    connectBtn.disabled = true;
+    connectedHandle.innerHTML = '<span class="handle">@' + esc(state.handle) + '</span>';
+    step2.classList.remove('disabled');
+    verifyBtn.disabled = false;
+  }
+  if (state.followed) {
+    step2.classList.add('done');
+    verifyBtn.innerHTML = '<span class="check">Verified</span>';
+    verifyBtn.disabled = true;
+    step3.classList.remove('disabled');
+    mintBtn.disabled = false;
+    mintBtn.classList.add('active');
+  }
+  if (state.minted) {
+    step3.classList.add('done');
+    mintBtn.innerHTML = '<span class="check">Minted — #' + String(state.nftId).padStart(4, '0') + '</span>';
+    mintBtn.disabled = true;
+    mintBtn.classList.remove('active');
+  }
+}
+
+connectBtn.addEventListener('click', () => {
+  window.open('https://x.com/intent/follow?screen_name=womb_dao', 'xconnect', 'width=600,height=500');
+  setTimeout(() => {
+    const handle = prompt('Enter your X handle (e.g. @yourname):');
+    if (handle && handle.trim()) {
+      state.handle = handle.trim().replace(/^@/, '');
+      save();
+      render();
+    }
+  }, 1000);
+});
+
+verifyBtn.addEventListener('click', () => {
+  if (!state.handle) return;
+  verifyBtn.textContent = 'Verifying...';
+  verifyBtn.disabled = true;
+  setTimeout(() => { state.followed = true; save(); render(); }, 1500);
+});
+
+mintBtn.addEventListener('click', () => {
+  if (!state.handle || !state.followed || state.minted) return;
+  mintBtn.textContent = 'Minting...';
+  mintBtn.disabled = true;
+  setTimeout(() => {
+    state.nftId = 1247 + Math.floor(Math.random() * 100);
+    state.minted = true;
+    save();
+    document.getElementById('nftId').textContent = '#' + String(state.nftId).padStart(4, '0');
+    mintModal.classList.add('show');
+    render();
+  }, 2000);
+});
+
+document.getElementById('closeModal').addEventListener('click', () => mintModal.classList.remove('show'));
+mintModal.addEventListener('click', e => { if (e.target === mintModal) mintModal.classList.remove('show'); });
+render();
+</script>
+</body>
+</html>
