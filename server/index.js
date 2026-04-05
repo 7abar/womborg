@@ -67,7 +67,7 @@ app.get('/api/search', (req, res) => {
 // ─── Chat (grounded, with citations) ─────────────────────────────────────────
 app.post('/api/chat', async (req, res) => {
   const apiKey = process.env.OPENROUTER_API_KEY;
-  const { messages, model = 'meta-llama/llama-3.1-8b-instruct:free', agent_mode = false } = req.body || {};
+  const { messages, model = 'openrouter/auto', agent_mode = false } = req.body || {};
 
   if (!messages || !Array.isArray(messages) || !messages.length) {
     return res.status(400).json({ error: 'messages array required' });
