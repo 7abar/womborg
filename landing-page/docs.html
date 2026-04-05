@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>API Documentation — WombDAO</title>
+<meta name="description" content="OpenAPI 3.0 documentation for the WombDAO public REST API.">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,900;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/styles.css">
+<link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@5.11.0/swagger-ui.css">
+<style>
+.docs-shell{max-width:1400px;margin:0 auto;padding:2rem 2rem 4rem;position:relative;z-index:2}
+.docs-head{margin-bottom:2rem}
+.docs-head h1{font-family:'Fraunces',serif;font-weight:900;font-size:clamp(2rem,4vw,3rem);line-height:1;letter-spacing:-.02em;margin-bottom:.6rem}
+.docs-head h1 em{font-style:italic;color:var(--stain);font-weight:400}
+.docs-head p{font-family:'Fraunces',serif;font-size:1.1rem;color:var(--ink-soft);max-width:720px}
+.docs-head p code{background:rgba(26,24,22,.08);padding:.1rem .4rem;font-family:'JetBrains Mono',monospace;font-size:.85rem}
+#swagger-ui{background:#fff;border:1.5px solid var(--ink);padding:1rem}
+.swagger-ui .topbar{display:none}
+</style>
+</head>
+<body>
+<header class="masthead">
+  <div class="mast-left"><div class="mast-title"><a href="/">WombDAO</a></div></div>
+  <nav class="mast-nav">
+    <a href="/agent">Agent</a><a href="/docs" class="active">API Docs</a><a href="/">Datasets</a><a href="/connect">Connect</a><a href="/for-agents">For Agents</a>
+  </nav>
+</header>
+<main class="docs-shell">
+  <div class="docs-head">
+    <h1>Public <em>API</em></h1>
+    <p>REST endpoints for the WombDAO archive. No authentication required for read endpoints. Rate-limited to 300 req / 15 min per IP. Spec available at <code>/api/openapi.json</code>.</p>
+  </div>
+  <div id="swagger-ui"></div>
+</main>
+<footer class="colophon">
+  <div class="colophon-inner">
+    <div class="colophon-badges">
+      <span class="colophon-badge">Agent-Friendly</span><span class="colophon-badge">Public API</span><span class="colophon-badge">OpenAPI 3.0</span>
+    </div>
+    <div class="colophon-bottom"><span>© MMXXVI · WombDAO</span><span><a href="/">Home</a> · <a href="/agent">Agent</a></span></div>
+  </div>
+</footer>
+<script src="https://unpkg.com/swagger-ui-dist@5.11.0/swagger-ui-bundle.js"></script>
+<script>
+SwaggerUIBundle({ url: '/api/openapi.json', dom_id: '#swagger-ui', deepLinking: true, docExpansion: 'list', tryItOutEnabled: true });
+</script>
+</body>
+</html>

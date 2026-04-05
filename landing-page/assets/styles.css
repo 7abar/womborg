@@ -1,0 +1,41 @@
+/* Shared styles for WombDAO pages */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --paper:#f4f1ea;--paper-dark:#ebe6d9;--ink:#1a1816;--ink-soft:#4a4540;--ink-light:#8a837a;
+  --rule:#c9c2b3;--stain:#c73e3a;--stain-dark:#8b2926;--fluor:#4a8f5f;--cyan:#2e7d8a;--amber:#b8862a;
+  --grid:rgba(26,24,22,.06);
+}
+html{scroll-behavior:smooth}
+body{background:var(--paper);color:var(--ink);font-family:'Fraunces',Georgia,serif;font-size:17px;line-height:1.55;overflow-x:hidden;
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:24px 24px;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.1 0 0 0 0 0.09 0 0 0 0 0.08 0 0 0 .04 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");pointer-events:none;z-index:1;mix-blend-mode:multiply;opacity:.7}
+::selection{background:var(--stain);color:var(--paper)}
+a{color:var(--stain);text-decoration:none;border-bottom:1px solid currentColor;transition:all .2s}
+a:hover{color:var(--stain-dark);background:rgba(199,62,58,.08)}
+.mono{font-family:'JetBrains Mono',monospace}
+
+.masthead{position:relative;z-index:2;border-bottom:3px double var(--ink);padding:1.2rem 2.5rem .9rem;display:flex;align-items:center;justify-content:space-between;gap:2rem;background:var(--paper)}
+.mast-left{display:flex;align-items:baseline;gap:1.5rem}
+.mast-title{font-family:'Fraunces',serif;font-variation-settings:"SOFT" 30,"WONK" 1;font-weight:900;font-size:1.6rem;line-height:1}
+.mast-title a{color:var(--ink);border-bottom:none}
+.mast-title em{font-style:italic;font-weight:400;font-size:.68em;color:var(--ink-soft);display:block;margin-top:.15rem}
+.mast-nav{display:flex;gap:1.5rem;font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase}
+.mast-nav a{color:var(--ink);border-bottom:1px solid transparent;padding-bottom:.1rem}
+.mast-nav a:hover,.mast-nav a.active{border-bottom-color:var(--stain);color:var(--stain);background:transparent}
+@media (max-width:900px){.masthead{flex-direction:column;align-items:flex-start;padding:1rem 1.5rem}.mast-nav{flex-wrap:wrap;gap:.8rem}}
+
+.btn{display:inline-flex;align-items:center;gap:.5rem;font-family:'JetBrains Mono',monospace;font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;padding:.95rem 1.4rem;border:1.5px solid var(--ink);background:var(--ink);color:var(--paper);cursor:pointer;transition:all .2s;text-decoration:none}
+.btn:hover{background:var(--stain);border-color:var(--stain);color:var(--paper);transform:translate(-2px,-2px);box-shadow:2px 2px 0 var(--ink)}
+.btn.outline{background:transparent;color:var(--ink)}
+.btn.outline:hover{background:var(--ink);color:var(--paper);box-shadow:2px 2px 0 var(--stain)}
+.btn svg{width:14px;height:14px}
+
+.colophon{position:relative;z-index:2;background:var(--ink);color:var(--paper-dark);padding:3.5rem 2.5rem 1.8rem;margin-top:4rem}
+.colophon-inner{max-width:1400px;margin:0 auto}
+.colophon-badges{display:flex;flex-wrap:wrap;gap:.6rem;margin-bottom:2rem;padding-bottom:2rem;border-bottom:1px solid rgba(244,241,234,.12)}
+.colophon-badge{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--fluor);border:1px solid rgba(74,143,95,.4);padding:.4rem .7rem;display:inline-flex;align-items:center;gap:.4rem}
+.colophon-badge::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--fluor)}
+.colophon-bottom{display:flex;justify-content:space-between;align-items:center;font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.08em;color:rgba(244,241,234,.35);flex-wrap:wrap;gap:1rem}
+.colophon-bottom a{color:rgba(244,241,234,.6);border:none}
+.colophon-bottom a:hover{color:var(--paper);background:transparent}

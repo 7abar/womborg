@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Connect — WombDAO</title>
+<meta name="description" content="Three ways to connect to WombDAO: web agent, API, or agent tooling.">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,700;0,900;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/styles.css">
+<style>
+.connect-shell{max-width:1200px;margin:0 auto;padding:3rem 2rem 4rem;position:relative;z-index:2}
+.connect-head{text-align:center;margin-bottom:3rem}
+.connect-head h1{font-family:'Fraunces',serif;font-weight:900;font-size:clamp(2.2rem,5vw,3.6rem);line-height:1;margin-bottom:1rem}
+.connect-head h1 em{font-style:italic;color:var(--stain);font-weight:400}
+.connect-head p{font-family:'Fraunces',serif;font-size:1.2rem;color:var(--ink-soft);max-width:640px;margin:0 auto}
+.paths{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:1.5px solid var(--ink)}
+.path{padding:2.5rem 2rem;border-right:1.5px solid var(--ink);background:rgba(255,255,255,.3);display:flex;flex-direction:column}
+.path:last-child{border-right:none}
+.path-num{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--stain);margin-bottom:1.5rem}
+.path h3{font-family:'Fraunces',serif;font-weight:700;font-size:1.6rem;line-height:1.1;margin-bottom:.8rem}
+.path h3 em{font-style:italic;color:var(--stain);font-weight:400}
+.path > p{font-family:'Fraunces',serif;font-size:1rem;color:var(--ink-soft);line-height:1.5;margin-bottom:1.5rem;flex:1}
+.path-details{font-family:'JetBrains Mono',monospace;font-size:.72rem;line-height:1.8;padding:.8rem;background:var(--ink);color:var(--paper);margin-bottom:1.5rem}
+.path-details code{color:#7dd3c0}
+.path .btn{width:100%;justify-content:center}
+@media (max-width:900px){.paths{grid-template-columns:1fr}.path{border-right:none;border-bottom:1.5px solid var(--ink)}.path:last-child{border-bottom:none}}
+</style>
+</head>
+<body>
+<header class="masthead">
+  <div class="mast-left"><div class="mast-title"><a href="/">WombDAO</a></div></div>
+  <nav class="mast-nav">
+    <a href="/agent">Agent</a><a href="/docs">API Docs</a><a href="/">Datasets</a><a href="/connect" class="active">Connect</a><a href="/for-agents">For Agents</a>
+  </nav>
+</header>
+<main class="connect-shell">
+  <div class="connect-head">
+    <h1>Three ways to <em>connect</em>.</h1>
+    <p>Pick the surface that fits. Same archive, same agent, same open ledger — no lock-in, no extension.</p>
+  </div>
+  <div class="paths">
+    <article class="path">
+      <div class="path-num">Path 001 · Humans</div>
+      <h3>Use the <em>Web Agent</em></h3>
+      <p>Open a browser tab, ask questions in plain English, get answers with citations. Zero setup, zero install, zero accounts.</p>
+      <div class="path-details">→ browser-native<br>→ inline citations<br>→ export md / json</div>
+      <a href="/agent" class="btn">Open /agent</a>
+    </article>
+    <article class="path">
+      <div class="path-num">Path 002 · Developers</div>
+      <h3>Call the <em>Public API</em></h3>
+      <p>REST endpoints for search, chat, datasets, and the ledger. OpenAPI 3.0 spec. No auth for reads. Generous rate limits.</p>
+      <div class="path-details">→ <code>GET /api/datasets</code><br>→ <code>GET /api/search?q=…</code><br>→ <code>POST /api/chat</code></div>
+      <a href="/docs" class="btn">Read /docs</a>
+    </article>
+    <article class="path">
+      <div class="path-num">Path 003 · Agents</div>
+      <h3>Wire up <em>agent tools</em></h3>
+      <p>Use the API directly from your MCP server, Browserbase / Playwright runner, or Computer Use loop. Structured JSON out.</p>
+      <div class="path-details">→ MCP-compatible<br>→ Playwright-ready<br>→ agent_mode: true</div>
+      <a href="/for-agents" class="btn">See /for-agents</a>
+    </article>
+  </div>
+</main>
+<footer class="colophon">
+  <div class="colophon-inner">
+    <div class="colophon-badges">
+      <span class="colophon-badge">Agent-Friendly</span><span class="colophon-badge">No Extension Required</span><span class="colophon-badge">Public API</span>
+    </div>
+    <div class="colophon-bottom"><span>© MMXXVI · WombDAO</span><span><a href="/">Home</a> · <a href="/agent">Agent</a> · <a href="/docs">API</a></span></div>
+  </div>
+</footer>
+</body>
+</html>
