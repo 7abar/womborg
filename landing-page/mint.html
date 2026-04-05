@@ -8,12 +8,25 @@
 <link rel="stylesheet" href="/assets/styles.css">
 <style>
 .mint-shell{max-width:800px;margin:0 auto;padding:3rem 2rem 4rem;position:relative;z-index:2}
-.mint-hero{text-align:center;margin-bottom:3rem}
+.mint-hero{text-align:center;margin-bottom:3rem;position:relative;padding:3rem 0}
+.mint-hero::before{content:'';position:absolute;top:50%;left:50%;width:400px;height:400px;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(199,62,58,.08) 0%,transparent 70%);pointer-events:none;animation:hero-glow 4s ease-in-out infinite}
+@keyframes hero-glow{0%,100%{opacity:.5;transform:translate(-50%,-50%) scale(1)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.2)}}
 .mint-overline{font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;color:var(--stain);margin-bottom:1rem;display:flex;align-items:center;justify-content:center;gap:.8rem}
-.mint-overline::before,.mint-overline::after{content:'';width:40px;height:1px;background:var(--rule)}
-.mint-hero h1{font-family:'Fraunces',serif;font-weight:900;font-size:clamp(2rem,5vw,3.2rem);line-height:1;margin-bottom:1.2rem;letter-spacing:-.02em}
+.mint-overline::before,.mint-overline::after{content:'';width:40px;height:1px;background:var(--stain)}
+.mint-live{display:inline-flex;align-items:center;gap:.4rem;background:var(--stain);color:var(--paper);padding:.2rem .6rem;font-size:.6rem;letter-spacing:.2em;animation:badge-blink 2s ease-in-out infinite}
+.mint-live::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--paper);animation:dot-pulse 1s infinite}
+@keyframes badge-blink{0%,100%{opacity:1}50%{opacity:.7}}
+@keyframes dot-pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.mint-hero h1{font-family:'Fraunces',serif;font-weight:900;font-size:clamp(2.2rem,6vw,3.8rem);line-height:.95;margin-bottom:1.2rem;letter-spacing:-.03em;position:relative}
 .mint-hero h1 em{font-style:italic;color:var(--stain);font-weight:400}
-.mint-hero p{font-family:'Fraunces',serif;font-size:1.15rem;color:var(--ink-soft);max-width:600px;margin:0 auto;line-height:1.5}
+.mint-hero p{font-family:'Fraunces',serif;font-size:1.2rem;color:var(--ink-soft);max-width:600px;margin:0 auto;line-height:1.5}
+.nft-preview{width:200px;height:200px;margin:2rem auto 0;border:2px solid var(--ink);background:var(--ink);position:relative;overflow:hidden;box-shadow:6px 6px 0 var(--stain)}
+.nft-preview-inner{position:absolute;inset:8px;border:1px solid rgba(244,241,234,.15);display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--paper)}
+.nft-preview-inner .logo{font-family:'Fraunces',serif;font-weight:900;font-size:2.2rem;line-height:1}
+.nft-preview-inner .sub{font-family:'JetBrains Mono',monospace;font-size:.55rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(244,241,234,.5);margin-top:.3rem}
+.nft-preview-inner .gen{font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--stain);margin-top:.8rem;border:1px solid var(--stain);padding:.2rem .5rem}
+.nft-shine{position:absolute;top:-100%;left:-100%;width:300%;height:300%;background:linear-gradient(135deg,transparent 40%,rgba(255,255,255,.05) 50%,transparent 60%);animation:shine 3s infinite linear;pointer-events:none}
+@keyframes shine{from{transform:translateX(-30%) translateY(-30%)}to{transform:translateX(30%) translateY(30%)}}
 .mint-counter{text-align:center;margin-bottom:2.5rem;font-family:'JetBrains Mono',monospace;font-size:.82rem;color:var(--ink-soft)}
 .mint-counter strong{color:var(--stain);font-size:1.1rem}
 .mint-progress{width:100%;max-width:400px;height:6px;background:var(--rule);margin:.8rem auto 0}
@@ -67,9 +80,17 @@
 </header>
 <main class="mint-shell">
   <div class="mint-hero">
-    <div class="mint-overline">Special Event</div>
-    <h1>Mint Your WombDAO <em>Genesis NFT</em></h1>
+    <div class="mint-overline"><span class="mint-live">LIVE</span> Special Event</div>
+    <h1>Mint Your<br>WombDAO <em>Genesis NFT</em></h1>
     <p>Connect your X account and follow <strong>@womb_dao</strong> to claim your free Genesis NFT. Limited to early supporters.</p>
+    <div class="nft-preview">
+      <div class="nft-shine"></div>
+      <div class="nft-preview-inner">
+        <div class="logo">W</div>
+        <div class="sub">WombDAO</div>
+        <div class="gen">Genesis</div>
+      </div>
+    </div>
   </div>
   <div class="mint-counter">
     <strong id="mintCount">1,247</strong> / 5,000 minted
@@ -148,6 +169,12 @@
   </div>
 </footer>
 <script>
+// ═══ CONFIGURABLE ═══
+// Ganti URL ini dengan link mint NFT yang sebenarnya
+const MINT_URL = 'https://example.com/mint'; // <-- GANTI LINK MINT DI SINI
+const X_ACCOUNT = 'womb_dao';
+// ═══════════════════
+
 const STATE_KEY = 'wombdao_mint';
 let state = JSON.parse(localStorage.getItem(STATE_KEY) || '{}');
 const step1 = document.getElementById('step1');
@@ -210,6 +237,8 @@ mintBtn.addEventListener('click', () => {
   if (!state.handle || !state.followed || state.minted) return;
   mintBtn.textContent = 'Minting...';
   mintBtn.disabled = true;
+  // Open the actual mint URL
+  window.open(MINT_URL, '_blank');
   setTimeout(() => {
     state.nftId = 1247 + Math.floor(Math.random() * 100);
     state.minted = true;
