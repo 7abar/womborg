@@ -24,6 +24,16 @@ app.use(express.json({ limit: '1mb' }));
 const apiLimiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 300, standardHeaders: true, legacyHeaders: false });
 app.use('/api', apiLimiter);
 
+// Strict rate limit for chat — max 20 per IP per 24h to save credits
+const chatLimiter = rateLimit({
+  windowMs: 24 * 60 * 60 * 1000,
+  max: 20,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Chat limit reached (20/day). Try again tomorrow.' }
+});
+app.use('/api/chat', chatLimiter);
+
 const landingDir = path.join(__dirname, '..', 'landing-page');
 app.use(express.static(landingDir));
 
@@ -96,7 +106,7 @@ app.post('/api/chat', async (req, res) => {
     const response = await fetchJSON('https://openrouter.ai/api/v1/chat/completions', {
       method: 'POST',
       headers: { 'Authorization': `Bearer ${apiKey}`, 'Content-Type': 'application/json', 'HTTP-Referer': 'https://womborg.up.railway.app', 'X-Title': 'WombDAO' },
-      body: JSON.stringify({ model, messages: [{ role: 'system', content: systemPrompt }, ...messages], max_tokens: 1024, temperature: 0.4 })
+      body: JSON.stringify({ model, messages: [{ role: 'system', content: systemPrompt }, ...messages], max_tokens: 256, temperature: 0.4 })
     });
     if (!response.ok) {
       const text = await response.text();
