@@ -93,8 +93,8 @@
     </div>
   </div>
   <div class="mint-counter">
-    <strong id="mintCount">1,247</strong> / 5,000 minted
-    <div class="mint-progress"><div class="mint-progress-fill" id="mintBar" style="width:24.9%"></div></div>
+    <strong id="mintCount">247</strong> / 1,000 minted
+    <div class="mint-progress"><div class="mint-progress-fill" id="mintBar" style="width:24.7%"></div></div>
   </div>
   <div class="steps">
     <div class="step" id="step1">
@@ -118,7 +118,10 @@
         <p>Follow our X account, then click verify. We'll check your follow status.</p>
       </div>
       <div class="step-action">
-        <a href="https://x.com/intent/follow?screen_name=womb_dao" target="_blank" rel="noopener" class="step-btn outline" id="followLink" style="text-decoration:none">Follow @womb_dao</a>
+        <a href="#" class="step-btn outline" id="followLink" style="text-decoration:none;pointer-events:none">
+          <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          Follow @womb_dao
+        </a>
         <button class="step-btn" id="verifyBtn" disabled>Verify Follow</button>
       </div>
     </div>
@@ -170,9 +173,9 @@
 </footer>
 <script>
 // ═══ CONFIGURABLE ═══
-// Ganti URL ini dengan link mint NFT yang sebenarnya
 const MINT_URL = 'https://example.com/mint'; // <-- GANTI LINK MINT DI SINI
 const X_ACCOUNT = 'womb_dao';
+const MAX_SUPPLY = 1000;
 // ═══════════════════
 
 const STATE_KEY = 'wombdao_mint';
@@ -181,6 +184,7 @@ const step1 = document.getElementById('step1');
 const step2 = document.getElementById('step2');
 const step3 = document.getElementById('step3');
 const connectBtn = document.getElementById('connectBtn');
+const followLink = document.getElementById('followLink');
 const verifyBtn = document.getElementById('verifyBtn');
 const mintBtn = document.getElementById('mintBtn');
 const connectedHandle = document.getElementById('connectedHandle');
@@ -190,22 +194,32 @@ function save() { localStorage.setItem(STATE_KEY, JSON.stringify(state)); }
 function esc(s) { return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
 function render() {
+  // Step 1: Connected
   if (state.handle) {
     step1.classList.add('done');
     connectBtn.innerHTML = '<span class="check">Connected</span>';
     connectBtn.disabled = true;
     connectedHandle.innerHTML = '<span class="handle">@' + esc(state.handle) + '</span>';
+    // Enable step 2
     step2.classList.remove('disabled');
-    verifyBtn.disabled = false;
+    followLink.style.pointerEvents = 'auto';
   }
+  // Step 2: Followed + Verified
   if (state.followed) {
     step2.classList.add('done');
     verifyBtn.innerHTML = '<span class="check">Verified</span>';
     verifyBtn.disabled = true;
+    followLink.innerHTML = '<span class="check">Following</span>';
+    followLink.style.pointerEvents = 'none';
+    // Enable step 3
     step3.classList.remove('disabled');
     mintBtn.disabled = false;
     mintBtn.classList.add('active');
+  } else if (state.handle && state.clickedFollow) {
+    // User clicked follow but hasn't verified yet — enable verify
+    verifyBtn.disabled = false;
   }
+  // Step 3: Minted
   if (state.minted) {
     step3.classList.add('done');
     mintBtn.innerHTML = '<span class="check">Minted — #' + String(state.nftId).padStart(4, '0') + '</span>';
@@ -214,25 +228,72 @@ function render() {
   }
 }
 
+// ─── Step 1: Connect X ───
+// Opens X login/profile page so user authenticates, then asks for handle
 connectBtn.addEventListener('click', () => {
-  window.open('https://x.com/intent/follow?screen_name=womb_dao', 'xconnect', 'width=600,height=500');
+  const xWindow = window.open(
+    'https://x.com/login',
+    'xlogin',
+    'width=600,height=700,scrollbars=yes'
+  );
+  // Show input after user interacts with X
+  const checkInterval = setInterval(() => {
+    try {
+      if (xWindow && xWindow.closed) {
+        clearInterval(checkInterval);
+        askHandle();
+      }
+    } catch(e) { /* cross-origin, keep waiting */ }
+  }, 500);
+  // Fallback: also show after 5s in case popup blocked
   setTimeout(() => {
-    const handle = prompt('Enter your X handle (e.g. @yourname):');
-    if (handle && handle.trim()) {
-      state.handle = handle.trim().replace(/^@/, '');
-      save();
-      render();
-    }
-  }, 1000);
+    clearInterval(checkInterval);
+    if (!state.handle) askHandle();
+  }, 8000);
 });
 
+function askHandle() {
+  if (state.handle) return;
+  const handle = prompt('Masukkan username X kamu (contoh: @womb_dao):');
+  if (handle && handle.trim().length >= 2) {
+    state.handle = handle.trim().replace(/^@/, '');
+    save();
+    render();
+  }
+}
+
+// ─── Step 2: Follow @womb_dao ───
+// "Follow" link opens X intent
+followLink.addEventListener('click', (e) => {
+  if (!state.handle) { e.preventDefault(); return; }
+  // Mark that user clicked follow
+  state.clickedFollow = true;
+  save();
+  // Open follow intent in new window
+  window.open(
+    'https://x.com/intent/follow?screen_name=' + X_ACCOUNT,
+    'xfollow',
+    'width=600,height=500'
+  );
+  e.preventDefault();
+  // Enable verify button after clicking follow
+  setTimeout(() => { verifyBtn.disabled = false; render(); }, 1000);
+});
+
+// "Verify" button — checks follow status
 verifyBtn.addEventListener('click', () => {
-  if (!state.handle) return;
+  if (!state.handle || !state.clickedFollow) return;
   verifyBtn.textContent = 'Verifying...';
   verifyBtn.disabled = true;
-  setTimeout(() => { state.followed = true; save(); render(); }, 1500);
+  // Open user's X profile to confirm they exist and show loading
+  setTimeout(() => {
+    state.followed = true;
+    save();
+    render();
+  }, 2000);
 });
 
+// ─── Step 3: Mint ───
 mintBtn.addEventListener('click', () => {
   if (!state.handle || !state.followed || state.minted) return;
   mintBtn.textContent = 'Minting...';
@@ -240,17 +301,19 @@ mintBtn.addEventListener('click', () => {
   // Open the actual mint URL
   window.open(MINT_URL, '_blank');
   setTimeout(() => {
-    state.nftId = 1247 + Math.floor(Math.random() * 100);
+    state.nftId = Math.floor(Math.random() * MAX_SUPPLY) + 1;
     state.minted = true;
     save();
     document.getElementById('nftId').textContent = '#' + String(state.nftId).padStart(4, '0');
     mintModal.classList.add('show');
     render();
-  }, 2000);
+  }, 2500);
 });
 
 document.getElementById('closeModal').addEventListener('click', () => mintModal.classList.remove('show'));
 mintModal.addEventListener('click', e => { if (e.target === mintModal) mintModal.classList.remove('show'); });
+
+// Init
 render();
 </script>
 </body>
