@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>For Agents — WombDAO</title>
+<meta name="description" content="Agent builder documentation: MCP, Playwright, Computer Use integration with WombDAO.">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,700;0,900;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/styles.css">
+<style>
+.agents-shell{max-width:980px;margin:0 auto;padding:3rem 2rem 4rem;position:relative;z-index:2}
+.agents-head{margin-bottom:3rem}
+.agents-head h1{font-family:'Fraunces',serif;font-weight:900;font-size:clamp(2.2rem,5vw,3.4rem);line-height:1;margin-bottom:1rem}
+.agents-head h1 em{font-style:italic;color:var(--stain);font-weight:400}
+.agents-head p{font-family:'Fraunces',serif;font-size:1.15rem;color:var(--ink-soft);max-width:720px;line-height:1.5}
+.agents-shell h2{font-family:'Fraunces',serif;font-weight:700;font-size:1.8rem;margin:3rem 0 1rem;border-bottom:1px solid var(--rule);padding-bottom:.5rem}
+.agents-shell h3{font-family:'Fraunces',serif;font-weight:600;font-size:1.3rem;margin:2rem 0 .8rem}
+.agents-shell p{font-family:'Fraunces',serif;font-size:1rem;color:var(--ink-soft);line-height:1.6;margin-bottom:1rem}
+.agents-shell p code,.agents-shell li code{background:rgba(26,24,22,.08);padding:.1rem .4rem;font-family:'JetBrains Mono',monospace;font-size:.85rem;color:var(--stain)}
+.agents-shell ul{font-family:'Fraunces',serif;color:var(--ink-soft);line-height:1.7;margin-bottom:1rem;padding-left:1.5rem}
+.code-block{background:var(--ink);color:var(--paper);padding:1.2rem 1.4rem;font-family:'JetBrains Mono',monospace;font-size:.8rem;line-height:1.6;overflow-x:auto;white-space:pre;margin:1rem 0;border-left:3px solid var(--stain)}
+.code-block .cm{color:rgba(244,241,234,.5)}
+.code-block .st{color:#7dd3c0}
+.code-block .kw{color:var(--stain)}
+.endpoint-table{width:100%;border-collapse:collapse;font-family:'JetBrains Mono',monospace;font-size:.82rem;margin:1rem 0;border:1.5px solid var(--ink)}
+.endpoint-table th{background:var(--ink);color:var(--paper);padding:.7rem 1rem;text-align:left;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase}
+.endpoint-table td{padding:.7rem 1rem;border-bottom:1px solid var(--rule);background:rgba(255,255,255,.3)}
+.endpoint-table td:first-child{color:var(--stain);font-weight:600}
+</style>
+</head>
+<body>
+<header class="masthead">
+  <div class="mast-left"><div class="mast-title"><a href="/">WombDAO</a></div></div>
+  <nav class="mast-nav">
+    <a href="/agent">Agent</a><a href="/docs">API Docs</a><a href="/">Datasets</a><a href="/connect">Connect</a><a href="/for-agents" class="active">For Agents</a>
+  </nav>
+</header>
+<main class="agents-shell">
+  <div class="agents-head">
+    <h1>For <em>agents</em>.</h1>
+    <p>A builder's guide to wiring WombDAO into your AI agent — whether it runs as a Claude/GPT tool call, an MCP server, a Playwright browser, or a Computer Use loop.</p>
+  </div>
+
+  <h2>Endpoints at a glance</h2>
+  <table class="endpoint-table">
+    <thead><tr><th>Method</th><th>Path</th><th>Purpose</th></tr></thead>
+    <tbody>
+      <tr><td>GET</td><td>/api/datasets</td><td>List 156 datasets (paginated)</td></tr>
+      <tr><td>GET</td><td>/api/datasets/:id</td><td>Single dataset by GSE id</td></tr>
+      <tr><td>GET</td><td>/api/search?q=…</td><td>TF-IDF vector search</td></tr>
+      <tr><td>POST</td><td>/api/chat</td><td>Grounded chat + citations</td></tr>
+      <tr><td>GET</td><td>/api/proposals</td><td>List ledger proposals</td></tr>
+      <tr><td>POST</td><td>/api/proposals</td><td>Submit a new proposal</td></tr>
+      <tr><td>POST</td><td>/api/proposals/:id/vote</td><td>Cast a vote (yes/no)</td></tr>
+      <tr><td>GET</td><td>/api/openapi.json</td><td>Full OpenAPI 3.0 spec</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Tool-call integration (Claude / GPT / Gemini)</h2>
+  <p>Expose WombDAO as two tools — <code>search</code> and <code>ask</code> — for any function-calling LLM.</p>
+  <div class="code-block"><span class="cm">// Tool definition (JSON schema, Claude-compatible)</span>
+{
+  <span class="st">"name"</span>: <span class="st">"wombdao_search"</span>,
+  <span class="st">"description"</span>: <span class="st">"Search WombDAO's ectogenesis dataset archive"</span>,
+  <span class="st">"input_schema"</span>: {
+    <span class="st">"type"</span>: <span class="st">"object"</span>,
+    <span class="st">"properties"</span>: { <span class="st">"q"</span>: { <span class="st">"type"</span>: <span class="st">"string"</span> } },
+    <span class="st">"required"</span>: [<span class="st">"q"</span>]
+  }
+}
+
+<span class="cm">// Tool handler</span>
+<span class="kw">async function</span> wombdao_search({ q }) {
+  <span class="kw">const</span> r = <span class="kw">await</span> fetch(<span class="st">`https://womborg.up.railway.app/api/search?q=${encodeURIComponent(q)}`</span>);
+  <span class="kw">return</span> (<span class="kw">await</span> r.json()).results;
+}</div>
+
+  <h2>Agent Mode (structured JSON)</h2>
+  <p>Pass <code>agent_mode: true</code> to <code>/api/chat</code> for a response shaped for downstream parsing.</p>
+  <div class="code-block"><span class="kw">curl</span> -X POST https://womborg.up.railway.app/api/chat \
+  -H <span class="st">"Content-Type: application/json"</span> \
+  -d '{
+    <span class="st">"messages"</span>: [{<span class="st">"role"</span>:<span class="st">"user"</span>,<span class="st">"content"</span>:<span class="st">"NANOG by stage"</span>}],
+    <span class="st">"agent_mode"</span>: <span class="kw">true</span>
+  }'
+
+<span class="cm"># Response</span>
+{
+  <span class="st">"success"</span>: <span class="kw">true</span>,
+  <span class="st">"reply"</span>: <span class="st">"NANOG peaks at morula stage [GSE36552]..."</span>,
+  <span class="st">"citations"</span>: [{<span class="st">"id"</span>:<span class="st">"GSE36552"</span>,<span class="st">"url"</span>:<span class="st">"..."</span>,<span class="st">"score"</span>:0.84}],
+  <span class="st">"sources"</span>: [{<span class="st">"id"</span>:<span class="st">"GSE36552"</span>,<span class="st">"title"</span>:<span class="st">"..."</span>,<span class="st">"samples"</span>:124}],
+  <span class="st">"model"</span>: <span class="st">"meta-llama/llama-3.1-8b-instruct:free"</span>
+}</div>
+
+  <h2>MCP server wrapper</h2>
+  <p>A minimal MCP server exposing WombDAO as tools:</p>
+  <div class="code-block"><span class="kw">import</span> { Server } <span class="kw">from</span> <span class="st">"@modelcontextprotocol/sdk/server"</span>;
+
+<span class="kw">const</span> BASE = <span class="st">"https://womborg.up.railway.app"</span>;
+<span class="kw">const</span> server = <span class="kw">new</span> Server({ name: <span class="st">"wombdao"</span>, version: <span class="st">"0.2.0"</span> });
+
+server.setRequestHandler(<span class="st">"tools/call"</span>, <span class="kw">async</span> ({ name, arguments: args }) => {
+  <span class="kw">if</span> (name === <span class="st">"search"</span>) {
+    <span class="kw">const</span> r = <span class="kw">await</span> fetch(<span class="st">`${BASE}/api/search?q=${encodeURIComponent(args.q)}`</span>);
+    <span class="kw">return</span> { content: [{ type: <span class="st">"text"</span>, text: <span class="kw">await</span> r.text() }] };
+  }
+  <span class="kw">if</span> (name === <span class="st">"chat"</span>) {
+    <span class="kw">const</span> r = <span class="kw">await</span> fetch(<span class="st">`${BASE}/api/chat`</span>, {
+      method: <span class="st">"POST"</span>,
+      headers: { <span class="st">"Content-Type"</span>: <span class="st">"application/json"</span> },
+      body: JSON.stringify({ messages: args.messages, agent_mode: <span class="kw">true</span> })
+    });
+    <span class="kw">return</span> { content: [{ type: <span class="st">"text"</span>, text: <span class="kw">await</span> r.text() }] };
+  }
+});</div>
+
+  <h2>Playwright / Browserbase</h2>
+  <p>If your agent drives a real browser, the Web Agent at <code>/agent</code> is fully automatable — stable selectors, no auth, no captcha.</p>
+  <div class="code-block"><span class="kw">await</span> page.goto(<span class="st">"https://womborg.up.railway.app/agent"</span>);
+<span class="kw">await</span> page.fill(<span class="st">"#chatInput"</span>, <span class="st">"What datasets cover methylation?"</span>);
+<span class="kw">await</span> page.click(<span class="st">"#sendBtn"</span>);
+<span class="kw">await</span> page.waitForSelector(<span class="st">".msg.agent .citations"</span>);
+<span class="kw">const</span> reply = <span class="kw">await</span> page.textContent(<span class="st">".msg.agent:last-child .text"</span>);</div>
+
+  <h2>Crawling &amp; discovery</h2>
+  <ul>
+    <li><code>/robots.txt</code> — permissive, API paths allowed</li>
+    <li><code>/sitemap.xml</code> — all pages + top dataset URLs</li>
+    <li>JSON-LD <code>Organization</code>, <code>WebSite</code>, <code>Dataset</code> on every page</li>
+    <li>Semantic HTML5 throughout (<code>&lt;article&gt;</code>, <code>&lt;section&gt;</code>, proper headings)</li>
+  </ul>
+
+  <h2>Rate limits &amp; etiquette</h2>
+  <p>300 requests per 15 minutes per IP. If you need more, open an issue on GitHub. Chat endpoints cost compute — cache responses when practical and pass a stable <code>User-Agent</code> identifying your agent.</p>
+</main>
+<footer class="colophon">
+  <div class="colophon-inner">
+    <div class="colophon-badges">
+      <span class="colophon-badge">Agent-Friendly</span><span class="colophon-badge">MCP-Ready</span><span class="colophon-badge">Playwright-Ready</span><span class="colophon-badge">Public API</span>
+    </div>
+    <div class="colophon-bottom"><span>© MMXXVI · WombDAO</span><span><a href="/">Home</a> · <a href="/agent">Agent</a> · <a href="/docs">API</a></span></div>
+  </div>
+</footer>
+</body>
+</html>

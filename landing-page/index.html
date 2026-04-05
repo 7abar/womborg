@@ -1,1562 +1,639 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>WombDAO — A Laboratory Notebook for Ectogenesis</title>
-<meta name="description" content="An open wet-lab logbook for ectogenesis research. Real genomics datasets, an AI research agent, and transparent governance." />
-<meta property="og:title" content="WombDAO — A Laboratory Notebook for Ectogenesis" />
-<meta property="og:description" content="An open wet-lab logbook for ectogenesis research." />
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,400;1,9..144,500&family=JetBrains+Mono:wght@300;400;500;600&family=Inter+Tight:wght@400;500;600&display=swap" rel="stylesheet">
-<style>
-/* ═══════════════════════════════════════════════════
-   WOMBDAO — LAB NOTEBOOK EDITION
-═══════════════════════════════════════════════════ */
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WombDAO — Agent-Friendly Ectogenesis Research Archive</title>
+  <meta name="description" content="An open agent-native archive for ectogenesis research. 156+ NCBI GEO datasets, a grounded AI agent, transparent governance ledger, and public REST API." />
 
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  <!-- OG Meta -->
+  <meta property="og:title" content="WombDAO — Agent-Friendly Ectogenesis Research Archive" />
+  <meta property="og:description" content="156+ NCBI GEO datasets, a grounded AI agent, transparent governance ledger, and public REST API." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://wombdao.org" />
+  <meta property="og:image" content="https://wombdao.org/assets/og-image.png" />
 
-:root{
-  --paper:#f4f1ea;
-  --paper-dark:#ebe6d9;
-  --ink:#1a1816;
-  --ink-soft:#4a4540;
-  --ink-light:#8a837a;
-  --rule:#c9c2b3;
-  --stain:#c73e3a;
-  --stain-dark:#8b2926;
-  --fluor:#4a8f5f;
-  --cyan:#2e7d8a;
-  --amber:#b8862a;
-  --grid:rgba(26,24,22,.06);
-}
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&family=JetBrains+Mono:wght@400;500&family=Inter+Tight:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
-html{scroll-behavior:smooth}
+  <link rel="stylesheet" href="/assets/styles.css" />
 
-body{
-  background:var(--paper);
-  color:var(--ink);
-  font-family:'Fraunces',Georgia,serif;
-  font-weight:400;
-  line-height:1.55;
-  font-size:17px;
-  overflow-x:hidden;
-  background-image:
-    linear-gradient(var(--grid) 1px,transparent 1px),
-    linear-gradient(90deg,var(--grid) 1px,transparent 1px),
-    radial-gradient(circle at 20% 30%,rgba(139,41,38,.015) 0%,transparent 40%),
-    radial-gradient(circle at 80% 70%,rgba(74,143,95,.015) 0%,transparent 40%);
-  background-size:24px 24px,24px 24px,100% 100%,100% 100%;
-}
+  <!-- JSON-LD: Organization -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "WombDAO",
+    "url": "https://wombdao.org",
+    "description": "Decentralized ectogenesis research archive with agent-native interfaces.",
+    "sameAs": [
+      "https://github.com/wombdao"
+    ]
+  }
+  </script>
 
-body::before{
-  content:'';
-  position:fixed;inset:0;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.1 0 0 0 0 0.09 0 0 0 0 0.08 0 0 0 .04 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  pointer-events:none;
-  z-index:1;
-  mix-blend-mode:multiply;
-  opacity:.7;
-}
+  <!-- JSON-LD: WebSite with SearchAction -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "WombDAO",
+    "url": "https://wombdao.org",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://wombdao.org/api/search?q={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  }
+  </script>
 
-::selection{background:var(--stain);color:var(--paper)}
+  <style>
+    /* ——— Hero ——— */
+    .hero {
+      padding: 6rem 2rem 4rem;
+      max-width: 72rem;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .hero .overline {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+      margin-bottom: 1rem;
+    }
+    .hero .stamp {
+      display: inline-block;
+      background: var(--accent-bg, #f0f0e8);
+      border: 1px solid var(--border, #ccc);
+      border-radius: 2px;
+      padding: 0.15em 0.5em;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      margin-left: 0.5em;
+    }
+    .hero h1 {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      line-height: 1.15;
+      margin: 1.5rem 0;
+      font-weight: 700;
+    }
+    .hero h1 em {
+      font-style: italic;
+    }
+    .hero h1 .annotated {
+      background: linear-gradient(to top, #ffe06640 45%, transparent 45%);
+      padding: 0 0.1em;
+    }
+    .hero .lede {
+      font-family: 'Inter Tight', sans-serif;
+      font-size: 1.1rem;
+      max-width: 38rem;
+      margin: 0 auto 2rem;
+      line-height: 1.6;
+      color: var(--text-secondary, #444);
+    }
+    .hero .actions {
+      display: flex;
+      gap: 0.75rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+    }
+    .hero .actions a {
+      font-family: 'Inter Tight', sans-serif;
+      font-weight: 600;
+      font-size: 0.9rem;
+      padding: 0.7em 1.5em;
+      border-radius: 4px;
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+    .hero .actions a.primary {
+      background: var(--fg, #111);
+      color: var(--bg, #fff);
+    }
+    .hero .actions a.outline {
+      border: 1.5px solid var(--border, #888);
+      color: var(--fg, #111);
+      background: transparent;
+    }
+    .hero .footnote {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--muted, #999);
+    }
 
-a{color:var(--stain);text-decoration:none;border-bottom:1px solid currentColor;transition:all .2s}
-a:hover{color:var(--stain-dark);background:rgba(199,62,58,.08)}
+    /* ——— Ticker ——— */
+    .ticker {
+      overflow: hidden;
+      border-top: 1px solid var(--border, #ddd);
+      border-bottom: 1px solid var(--border, #ddd);
+      padding: 0.6rem 0;
+      white-space: nowrap;
+    }
+    .ticker-track {
+      display: inline-flex;
+      animation: ticker-scroll 30s linear infinite;
+    }
+    .ticker-item {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      padding: 0 2rem;
+      color: var(--muted, #666);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .ticker-item::before {
+      content: '◆';
+      margin-right: 0.75rem;
+      opacity: 0.35;
+    }
+    @keyframes ticker-scroll {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
 
-.mono{font-family:'JetBrains Mono',monospace;font-weight:400}
-.sans{font-family:'Inter Tight',sans-serif}
-.italic{font-style:italic}
-.display{font-family:'Fraunces',serif;font-variation-settings:"SOFT" 50,"WONK" 1;font-weight:900;letter-spacing:-.02em;line-height:.95}
+    /* ——— Figures ——— */
+    .figures {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+      gap: 1px;
+      background: var(--border, #ddd);
+      max-width: 72rem;
+      margin: 0 auto;
+    }
+    .figure-card {
+      background: var(--bg, #fff);
+      padding: 2rem;
+      text-align: center;
+    }
+    .figure-card .fig-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted, #999);
+      margin-bottom: 0.5rem;
+    }
+    .figure-card .fig-number {
+      font-family: 'Fraunces', serif;
+      font-size: 2.5rem;
+      font-weight: 700;
+      line-height: 1;
+      margin-bottom: 0.25rem;
+    }
+    .figure-card .fig-desc {
+      font-family: 'Inter Tight', sans-serif;
+      font-size: 0.8rem;
+      color: var(--text-secondary, #555);
+    }
 
-.stamp{
-  display:inline-block;
-  font-family:'JetBrains Mono',monospace;
-  font-size:.68rem;
-  letter-spacing:.15em;
-  text-transform:uppercase;
-  color:var(--stain);
-  border:1.5px solid var(--stain);
-  padding:.35rem .7rem .28rem;
-  transform:rotate(-1.5deg);
-  background:rgba(199,62,58,.04);
-}
+    /* ——— Sections ——— */
+    section {
+      max-width: 72rem;
+      margin: 0 auto;
+      padding: 4rem 2rem;
+    }
+    .section-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--muted, #999);
+      margin-bottom: 0.5rem;
+    }
+    section h2 {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(1.5rem, 3vw, 2.25rem);
+      font-weight: 700;
+      margin-bottom: 2rem;
+    }
 
-/* MASTHEAD */
-.masthead{
-  position:relative;
-  z-index:2;
-  border-bottom:3px double var(--ink);
-  padding:1.2rem 2.5rem .9rem;
-  display:flex;
-  align-items:flex-end;
-  justify-content:space-between;
-  gap:2rem;
-  background:var(--paper);
-}
-.mast-left{display:flex;align-items:baseline;gap:1.5rem}
-.mast-issue{
-  font-family:'JetBrains Mono',monospace;
-  font-size:.7rem;
-  letter-spacing:.1em;
-  text-transform:uppercase;
-  color:var(--ink-light);
-  border-right:1px solid var(--rule);
-  padding-right:1.5rem;
-}
-.mast-title{
-  font-family:'Fraunces',serif;
-  font-variation-settings:"SOFT" 30,"WONK" 1;
-  font-weight:900;
-  font-size:1.8rem;
-  letter-spacing:-.01em;
-  line-height:1;
-}
-.mast-title em{
-  font-style:italic;
-  font-weight:400;
-  font-size:.7em;
-  color:var(--ink-soft);
-  display:block;
-  margin-top:.1rem;
-  letter-spacing:0;
-}
-.mast-nav{
-  display:flex;
-  gap:1.5rem;
-  font-family:'JetBrains Mono',monospace;
-  font-size:.75rem;
-  letter-spacing:.08em;
-  text-transform:uppercase;
-}
-.mast-nav a{
-  color:var(--ink);
-  border-bottom:none;
-  padding-bottom:.15rem;
-  border-bottom:1px solid transparent;
-}
-.mast-nav a:hover{border-bottom-color:var(--stain);background:transparent;color:var(--stain)}
-.mast-right{display:flex;align-items:center;gap:1.2rem}
-.mast-date{
-  font-family:'JetBrains Mono',monospace;
-  font-size:.72rem;
-  color:var(--ink-light);
-  text-align:right;
-  line-height:1.4;
-}
+    /* ——— Apparatus Cards ——— */
+    .app-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+      gap: 1.5rem;
+    }
+    .app-card {
+      border: 1px solid var(--border, #ddd);
+      border-radius: 4px;
+      padding: 2rem;
+    }
+    .app-card .surface-id {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted, #999);
+      margin-bottom: 0.75rem;
+    }
+    .app-card h3 {
+      font-family: 'Fraunces', serif;
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    .app-card p {
+      font-family: 'Inter Tight', sans-serif;
+      font-size: 0.9rem;
+      color: var(--text-secondary, #555);
+      line-height: 1.5;
+    }
 
-@media (max-width:900px){
-  .masthead{flex-direction:column;align-items:flex-start;padding:1rem 1.5rem}
-  .mast-nav{display:none}
-}
+    /* ——— Protocol ——— */
+    .protocol-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      align-items: start;
+    }
+    .protocol-steps {
+      list-style: none;
+      padding: 0;
+      counter-reset: step;
+    }
+    .protocol-steps li {
+      counter-increment: step;
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--border, #eee);
+      font-family: 'Inter Tight', sans-serif;
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+    .protocol-steps li::before {
+      content: counter(step, decimal-leading-zero);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--muted, #999);
+      margin-right: 1rem;
+    }
+    .terminal-panel {
+      background: #1a1a1a;
+      color: #e0e0e0;
+      border-radius: 6px;
+      padding: 1.5rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      line-height: 1.6;
+      overflow-x: auto;
+    }
+    .terminal-panel .prompt {
+      color: #7ec699;
+    }
+    .terminal-panel .comment {
+      color: #666;
+    }
+    @media (max-width: 640px) {
+      .protocol-grid {
+        grid-template-columns: 1fr;
+      }
+    }
 
-/* HERO */
-.hero{
-  position:relative;
-  z-index:2;
-  padding:4rem 2.5rem 6rem;
-  max-width:1400px;
-  margin:0 auto;
-  display:grid;
-  grid-template-columns:1fr 380px;
-  gap:4rem;
-  align-items:start;
-}
+    /* ——— Samples Table ——— */
+    .samples-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: 'Inter Tight', sans-serif;
+      font-size: 0.85rem;
+    }
+    .samples-table thead {
+      border-bottom: 2px solid var(--fg, #111);
+    }
+    .samples-table th {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      text-align: left;
+      padding: 0.75rem 1rem;
+      color: var(--muted, #999);
+    }
+    .samples-table td {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--border, #eee);
+      vertical-align: top;
+    }
+    .samples-table td a {
+      color: var(--fg, #111);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+    .samples-table .note {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--muted, #999);
+      margin-top: 1rem;
+    }
 
-.hero-meta{
-  display:flex;
-  flex-direction:column;
-  gap:1.2rem;
-  padding-top:.5rem;
-}
-.specimen-label{
-  border:1px solid var(--ink);
-  padding:.9rem 1.1rem;
-  font-family:'JetBrains Mono',monospace;
-  font-size:.72rem;
-  line-height:1.8;
-  background:rgba(255,255,255,.3);
-  position:relative;
-}
-.specimen-label::before{
-  content:'SPECIMEN';
-  position:absolute;
-  top:-.55rem;
-  left:.8rem;
-  background:var(--paper);
-  padding:0 .5rem;
-  font-size:.62rem;
-  letter-spacing:.2em;
-  color:var(--ink-soft);
-}
-.specimen-label .row{display:flex;justify-content:space-between;gap:1rem;border-bottom:1px dotted var(--rule);padding:.15rem 0}
-.specimen-label .row:last-child{border-bottom:none}
-.specimen-label .k{color:var(--ink-light);text-transform:uppercase;letter-spacing:.05em}
-.specimen-label .v{color:var(--ink);font-weight:500}
-.specimen-label .v.hot{color:var(--stain)}
-.specimen-label .v.live::before{
-  content:'';display:inline-block;width:6px;height:6px;background:var(--fluor);border-radius:50%;margin-right:.4rem;
-  animation:blink 1.6s infinite;
-}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+    /* ——— Dossier ——— */
+    .dossier {
+      text-align: center;
+      padding: 5rem 2rem;
+    }
+    .dossier blockquote {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(1.25rem, 3vw, 1.75rem);
+      font-style: italic;
+      max-width: 36rem;
+      margin: 0 auto 2.5rem;
+      line-height: 1.4;
+      color: var(--text-secondary, #444);
+    }
+    .dossier .cta-card {
+      display: inline-flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      justify-content: center;
+    }
+    .dossier .cta-card a {
+      font-family: 'Inter Tight', sans-serif;
+      font-weight: 600;
+      font-size: 0.9rem;
+      padding: 0.7em 1.5em;
+      border-radius: 4px;
+      text-decoration: none;
+    }
+    .dossier .cta-card a.primary {
+      background: var(--fg, #111);
+      color: var(--bg, #fff);
+    }
+    .dossier .cta-card a.outline {
+      border: 1.5px solid var(--border, #888);
+      color: var(--fg, #111);
+      background: transparent;
+    }
 
-.hero-title-area{max-width:900px}
-.hero-overline{
-  display:flex;
-  align-items:center;
-  gap:.8rem;
-  margin-bottom:1.5rem;
-  font-family:'JetBrains Mono',monospace;
-  font-size:.72rem;
-  letter-spacing:.15em;
-  text-transform:uppercase;
-  color:var(--ink-soft);
-}
-.hero-overline::after{
-  content:'';flex:1;height:1px;background:var(--rule);
-}
+    /* ——— Colophon / Footer ——— */
+    .colophon {
+      border-top: 1px solid var(--border, #ddd);
+      padding: 2rem;
+      text-align: center;
+    }
+    .colophon .badges {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .colophon .badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      border: 1px solid var(--border, #ccc);
+      border-radius: 2px;
+      padding: 0.3em 0.7em;
+      color: var(--muted, #888);
+    }
 
-.hero h1{
-  font-family:'Fraunces',serif;
-  font-variation-settings:"SOFT" 40,"WONK" 1;
-  font-weight:900;
-  font-size:clamp(2.8rem,6.5vw,5.4rem);
-  line-height:.92;
-  letter-spacing:-.025em;
-  margin-bottom:1.8rem;
-  color:var(--ink);
-}
-.hero h1 em{
-  font-style:italic;
-  font-weight:400;
-  font-variation-settings:"SOFT" 80,"WONK" 1;
-  color:var(--stain);
-}
-.hero h1 .annotated{
-  position:relative;
-  display:inline-block;
-}
-.hero h1 .annotated::after{
-  content:'';
-  position:absolute;
-  left:-2%;right:-2%;
-  bottom:8%;
-  height:.45em;
-  background:rgba(184,134,42,.3);
-  z-index:-1;
-  transform:skew(-2deg);
-}
-
-.hero-lede{
-  font-family:'Fraunces',serif;
-  font-size:1.25rem;
-  line-height:1.55;
-  color:var(--ink-soft);
-  max-width:640px;
-  margin-bottom:2.5rem;
-  font-weight:400;
-}
-.hero-lede strong{color:var(--ink);font-weight:600}
-
-.hero-actions{display:flex;gap:1rem;align-items:center;flex-wrap:wrap}
-
-.btn{
-  display:inline-flex;align-items:center;gap:.5rem;
-  font-family:'JetBrains Mono',monospace;
-  font-size:.78rem;
-  letter-spacing:.08em;
-  text-transform:uppercase;
-  padding:.95rem 1.4rem;
-  border:1.5px solid var(--ink);
-  background:var(--ink);
-  color:var(--paper);
-  cursor:pointer;
-  transition:all .2s;
-  text-decoration:none;
-  border-bottom:1.5px solid var(--ink);
-  position:relative;
-}
-.btn:hover{background:var(--stain);border-color:var(--stain);color:var(--paper);transform:translate(-2px,-2px);box-shadow:2px 2px 0 var(--ink)}
-.btn.outline{background:transparent;color:var(--ink);border-color:var(--ink)}
-.btn.outline:hover{background:var(--ink);color:var(--paper);box-shadow:2px 2px 0 var(--stain)}
-.btn svg{width:14px;height:14px}
-
-.hero-footnote{
-  margin-top:2rem;
-  font-family:'JetBrains Mono',monospace;
-  font-size:.72rem;
-  color:var(--ink-light);
-  border-top:1px dotted var(--rule);
-  padding-top:1rem;
-  max-width:640px;
-}
-.hero-footnote sup{color:var(--stain);font-weight:600}
-
-@media (max-width:1000px){
-  .hero{grid-template-columns:1fr;gap:2.5rem;padding:3rem 1.5rem 4rem}
-  .hero-meta{order:2}
-}
-
-/* TICKER */
-.ticker{
-  position:relative;z-index:2;
-  border-top:1px solid var(--ink);
-  border-bottom:1px solid var(--ink);
-  background:var(--ink);
-  color:var(--paper);
-  overflow:hidden;
-  padding:.7rem 0;
-}
-.ticker-track{
-  display:flex;
-  gap:3rem;
-  white-space:nowrap;
-  animation:scroll 40s linear infinite;
-  font-family:'JetBrains Mono',monospace;
-  font-size:.78rem;
-  letter-spacing:.08em;
-  text-transform:uppercase;
-}
-.ticker-item{display:flex;align-items:center;gap:.8rem}
-.ticker-item::before{content:'◆';color:var(--stain);font-size:.6rem}
-@keyframes scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-
-/* FIGURES */
-.figures{
-  position:relative;z-index:2;
-  max-width:1400px;
-  margin:0 auto;
-  padding:5rem 2.5rem;
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:0;
-  border-bottom:1px solid var(--rule);
-}
-.figure{
-  padding:1.5rem 2rem;
-  border-right:1px solid var(--rule);
-  position:relative;
-}
-.figure:last-child{border-right:none}
-.figure-num{
-  font-family:'JetBrains Mono',monospace;
-  font-size:.65rem;
-  letter-spacing:.2em;
-  color:var(--stain);
-  text-transform:uppercase;
-  margin-bottom:.5rem;
-}
-.figure-value{
-  font-family:'Fraunces',serif;
-  font-variation-settings:"SOFT" 20,"WONK" 1;
-  font-weight:900;
-  font-size:3.2rem;
-  line-height:1;
-  color:var(--ink);
-  letter-spacing:-.02em;
-  margin-bottom:.4rem;
-}
-.figure-value .unit{font-size:.4em;color:var(--ink-light);font-weight:400;font-style:italic}
-.figure-label{
-  font-family:'Fraunces',serif;
-  font-style:italic;
-  font-size:.95rem;
-  color:var(--ink-soft);
-  line-height:1.3;
-}
-.figure-spark{
-  margin-top:.6rem;
-  height:18px;
-  display:flex;
-  align-items:flex-end;
-  gap:2px;
-}
-.figure-spark span{
-  flex:1;
-  background:var(--ink-soft);
-  opacity:.4;
-}
-@media (max-width:900px){
-  .figures{grid-template-columns:repeat(2,1fr);padding:3rem 1.5rem}
-  .figure:nth-child(2){border-right:none}
-  .figure:nth-child(1),.figure:nth-child(2){border-bottom:1px solid var(--rule)}
-}
-
-/* SECTION */
-.section{
-  position:relative;z-index:2;
-  max-width:1400px;
-  margin:0 auto;
-  padding:6rem 2.5rem;
-  border-bottom:1px solid var(--rule);
-}
-.section-header{
-  display:grid;
-  grid-template-columns:180px 1fr;
-  gap:3rem;
-  margin-bottom:4rem;
-  align-items:start;
-}
-.section-marker{
-  font-family:'JetBrains Mono',monospace;
-  font-size:.72rem;
-  letter-spacing:.15em;
-  text-transform:uppercase;
-  color:var(--stain);
-  padding-top:.5rem;
-  position:relative;
-}
-.section-marker::before{
-  content:'§';
-  font-family:'Fraunces',serif;
-  font-size:1.4rem;
-  color:var(--stain);
-  display:block;
-  margin-bottom:.3rem;
-}
-.section-intro h2{
-  font-family:'Fraunces',serif;
-  font-variation-settings:"SOFT" 40,"WONK" 1;
-  font-weight:900;
-  font-size:clamp(2rem,4vw,3.2rem);
-  line-height:1;
-  letter-spacing:-.02em;
-  margin-bottom:1.2rem;
-  max-width:800px;
-}
-.section-intro h2 em{font-style:italic;font-weight:400;color:var(--stain)}
-.section-intro p{
-  font-family:'Fraunces',serif;
-  font-size:1.15rem;
-  color:var(--ink-soft);
-  max-width:650px;
-  line-height:1.55;
-}
-@media (max-width:800px){
-  .section{padding:4rem 1.5rem}
-  .section-header{grid-template-columns:1fr;gap:1rem;margin-bottom:2.5rem}
-}
-
-/* APPARATUS */
-.apparatus{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:0;
-  border-top:1px solid var(--ink);
-  border-left:1px solid var(--ink);
-}
-.app-card{
-  border-right:1px solid var(--ink);
-  border-bottom:1px solid var(--ink);
-  padding:2.5rem 2rem;
-  background:rgba(255,255,255,.2);
-  position:relative;
-  transition:background .3s;
-}
-.app-card:hover{background:rgba(199,62,58,.04)}
-.app-num{
-  font-family:'JetBrains Mono',monospace;
-  font-size:.68rem;
-  letter-spacing:.15em;
-  color:var(--ink-light);
-  margin-bottom:1.5rem;
-}
-.app-diagram{
-  height:120px;
-  margin-bottom:1.5rem;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  border-bottom:1px dotted var(--rule);
-  padding-bottom:1.5rem;
-}
-.app-diagram svg{max-width:100%;height:100%}
-.app-card h3{
-  font-family:'Fraunces',serif;
-  font-variation-settings:"SOFT" 30,"WONK" 1;
-  font-weight:700;
-  font-size:1.5rem;
-  line-height:1.1;
-  letter-spacing:-.01em;
-  margin-bottom:.8rem;
-  color:var(--ink);
-}
-.app-card h3 em{font-style:italic;color:var(--stain);font-weight:500}
-.app-card p{
-  font-family:'Fraunces',serif;
-  font-size:1rem;
-  color:var(--ink-soft);
-  line-height:1.55;
-  margin-bottom:1.2rem;
-}
-.app-tags{
-  display:flex;flex-wrap:wrap;gap:.4rem;
-  padding-top:1rem;
-  border-top:1px dotted var(--rule);
-}
-.app-tags span{
-  font-family:'JetBrains Mono',monospace;
-  font-size:.65rem;
-  letter-spacing:.05em;
-  color:var(--cyan);
-  text-transform:lowercase;
-}
-.app-tags span::before{content:'#';opacity:.6}
-@media (max-width:900px){.apparatus{grid-template-columns:1fr}}
-
-/* DATASETS TABLE */
-.samples-table{
-  border:1.5px solid var(--ink);
-  background:rgba(255,255,255,.3);
-  font-family:'JetBrains Mono',monospace;
-  font-size:.82rem;
-}
-.samples-head{
-  display:grid;
-  grid-template-columns:110px 1fr 120px 90px 110px 50px;
-  gap:1rem;
-  padding:.8rem 1.2rem;
-  background:var(--ink);
-  color:var(--paper);
-  font-size:.68rem;
-  letter-spacing:.15em;
-  text-transform:uppercase;
-  font-weight:500;
-}
-.sample-row{
-  display:grid;
-  grid-template-columns:110px 1fr 120px 90px 110px 50px;
-  gap:1rem;
-  padding:1.1rem 1.2rem;
-  border-bottom:1px solid var(--rule);
-  align-items:center;
-  text-decoration:none;
-  color:var(--ink);
-  border-left:none;border-right:none;border-top:none;
-  transition:all .15s;
-}
-.sample-row:hover{background:rgba(199,62,58,.05)}
-.sample-row:last-child{border-bottom:none}
-.sample-acc{
-  font-weight:600;
-  color:var(--stain);
-  letter-spacing:.02em;
-}
-.sample-title{
-  font-family:'Fraunces',serif;
-  font-size:1rem;
-  color:var(--ink);
-  line-height:1.3;
-  font-weight:500;
-  font-style:italic;
-}
-.sample-type{color:var(--cyan);font-size:.72rem}
-.sample-n{color:var(--ink-soft);text-align:right}
-.sample-year{color:var(--ink-light);font-size:.72rem}
-.sample-arrow{text-align:right;color:var(--ink-light);font-size:1.2rem;font-family:'Fraunces',serif}
-.sample-row:hover .sample-arrow{color:var(--stain);transform:translateX(4px)}
-
-@media (max-width:900px){
-  .samples-head{display:none}
-  .sample-row{grid-template-columns:1fr;gap:.4rem;padding:1rem}
-  .sample-row>*{text-align:left!important}
-}
-
-.ncbi-note{
-  margin-top:1.5rem;
-  font-family:'Fraunces',serif;
-  font-style:italic;
-  font-size:.95rem;
-  color:var(--ink-soft);
-  display:flex;
-  align-items:center;
-  gap:.8rem;
-}
-.ncbi-note svg{flex-shrink:0}
-
-/* PROTOCOL */
-.protocol{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:4rem;
-  align-items:start;
-}
-.protocol-steps{counter-reset:step}
-.protocol-step{
-  display:grid;
-  grid-template-columns:60px 1fr;
-  gap:1.5rem;
-  padding:1.8rem 0;
-  border-bottom:1px dotted var(--rule);
-  counter-increment:step;
-  position:relative;
-}
-.protocol-step:last-child{border-bottom:none}
-.protocol-step::before{
-  content:counter(step,decimal-leading-zero);
-  font-family:'JetBrains Mono',monospace;
-  font-size:2.2rem;
-  font-weight:300;
-  color:var(--stain);
-  line-height:1;
-  letter-spacing:-.02em;
-}
-.protocol-step h4{
-  font-family:'Fraunces',serif;
-  font-weight:600;
-  font-size:1.2rem;
-  margin-bottom:.3rem;
-  color:var(--ink);
-  line-height:1.2;
-}
-.protocol-step p{
-  font-family:'Fraunces',serif;
-  font-size:.98rem;
-  color:var(--ink-soft);
-  line-height:1.5;
-}
-
-.terminal-panel{
-  background:var(--ink);
-  color:var(--paper);
-  font-family:'JetBrains Mono',monospace;
-  font-size:.78rem;
-  line-height:1.7;
-  padding:1.5rem;
-  border:1px solid var(--ink);
-  position:sticky;
-  top:2rem;
-  box-shadow:6px 6px 0 var(--stain);
-}
-.terminal-head{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding-bottom:.8rem;
-  margin-bottom:1rem;
-  border-bottom:1px solid rgba(244,241,234,.15);
-  font-size:.65rem;
-  letter-spacing:.15em;
-  text-transform:uppercase;
-  color:rgba(244,241,234,.5);
-}
-.terminal-head .dots{display:flex;gap:.3rem}
-.terminal-head .dots span{width:8px;height:8px;border-radius:50%;background:rgba(244,241,234,.2)}
-.terminal-line{margin-bottom:.4rem}
-.terminal-line .prompt{color:var(--fluor)}
-.terminal-line .hl{color:var(--stain)}
-.terminal-line .cy{color:#7dd3c0}
-.terminal-line .dim{color:rgba(244,241,234,.5)}
-.terminal-cursor{
-  display:inline-block;
-  width:8px;height:14px;
-  background:var(--fluor);
-  animation:blink 1s steps(2) infinite;
-  vertical-align:middle;
-}
-
-@media (max-width:900px){
-  .protocol{grid-template-columns:1fr;gap:2rem}
-  .terminal-panel{position:static}
-}
-
-/* LEDGER */
-.ledger{
-  display:flex;
-  flex-direction:column;
-  gap:0;
-  border-top:2px solid var(--ink);
-  border-bottom:2px solid var(--ink);
-}
-.ledger-entry{
-  display:grid;
-  grid-template-columns:90px 1fr 260px;
-  gap:2.5rem;
-  padding:2rem 1.5rem;
-  border-bottom:1px solid var(--rule);
-  align-items:start;
-  transition:background .2s;
-}
-.ledger-entry:hover{background:rgba(199,62,58,.03)}
-.ledger-entry:last-child{border-bottom:none}
-.ledger-meta{
-  font-family:'JetBrains Mono',monospace;
-  font-size:.72rem;
-  line-height:1.6;
-}
-.ledger-id{
-  font-size:1.6rem;
-  font-weight:600;
-  color:var(--ink);
-  letter-spacing:-.02em;
-  line-height:1;
-  margin-bottom:.3rem;
-}
-.ledger-status{
-  display:inline-block;
-  font-size:.62rem;
-  letter-spacing:.12em;
-  text-transform:uppercase;
-  padding:.2rem .5rem;
-  border:1px solid currentColor;
-  margin-top:.3rem;
-}
-.status-open{color:var(--fluor)}
-.status-closed{color:var(--cyan)}
-.status-review{color:var(--amber)}
-
-.ledger-body h4{
-  font-family:'Fraunces',serif;
-  font-variation-settings:"SOFT" 20,"WONK" 1;
-  font-weight:600;
-  font-size:1.35rem;
-  line-height:1.25;
-  margin-bottom:.6rem;
-  color:var(--ink);
-}
-.ledger-body h4 em{font-style:italic;color:var(--stain);font-weight:500}
-.ledger-body p{
-  font-family:'Fraunces',serif;
-  font-size:.98rem;
-  color:var(--ink-soft);
-  line-height:1.5;
-  max-width:600px;
-}
-.ledger-body .proposer{
-  display:block;
-  margin-top:.6rem;
-  font-family:'JetBrains Mono',monospace;
-  font-size:.7rem;
-  color:var(--ink-light);
-  letter-spacing:.05em;
-}
-
-.ledger-votes{
-  font-family:'JetBrains Mono',monospace;
-  font-size:.75rem;
-}
-.vote-numbers{
-  display:flex;
-  justify-content:space-between;
-  margin-bottom:.5rem;
-  font-size:.7rem;
-  letter-spacing:.08em;
-  text-transform:uppercase;
-}
-.vote-yes{color:var(--fluor);font-weight:600}
-.vote-no{color:var(--stain);font-weight:600}
-.vote-bar{
-  display:flex;
-  height:24px;
-  border:1px solid var(--ink);
-  overflow:hidden;
-}
-.vote-bar-yes{
-  background:repeating-linear-gradient(45deg,var(--fluor),var(--fluor) 3px,rgba(74,143,95,.7) 3px,rgba(74,143,95,.7) 6px);
-}
-.vote-bar-no{
-  background:repeating-linear-gradient(45deg,var(--stain),var(--stain) 3px,rgba(199,62,58,.7) 3px,rgba(199,62,58,.7) 6px);
-}
-.vote-tally{
-  margin-top:.5rem;
-  font-size:.68rem;
-  color:var(--ink-light);
-  display:flex;
-  justify-content:space-between;
-}
-
-@media (max-width:900px){
-  .ledger-entry{grid-template-columns:1fr;gap:1rem;padding:1.5rem 1rem}
-}
-
-/* DOSSIER */
-.dossier{
-  position:relative;z-index:2;
-  max-width:1400px;
-  margin:0 auto;
-  padding:7rem 2.5rem;
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:5rem;
-  align-items:center;
-  border-bottom:3px double var(--ink);
-}
-.dossier-quote{
-  font-family:'Fraunces',serif;
-  font-style:italic;
-  font-size:clamp(1.8rem,3.5vw,2.8rem);
-  line-height:1.2;
-  font-weight:300;
-  letter-spacing:-.01em;
-  color:var(--ink);
-  position:relative;
-}
-.dossier-quote::before{
-  content:'"';
-  position:absolute;
-  top:-3rem;left:-1.5rem;
-  font-family:'Fraunces',serif;
-  font-size:8rem;
-  line-height:1;
-  color:var(--stain);
-  opacity:.2;
-  font-style:normal;
-}
-.dossier-quote cite{
-  display:block;
-  margin-top:2rem;
-  font-style:normal;
-  font-size:.85rem;
-  font-family:'JetBrains Mono',monospace;
-  letter-spacing:.1em;
-  text-transform:uppercase;
-  color:var(--ink-light);
-}
-.dossier-quote cite::before{content:'— '}
-
-.dossier-card{
-  border:1.5px solid var(--ink);
-  padding:2.5rem;
-  background:rgba(255,255,255,.3);
-  box-shadow:8px 8px 0 var(--ink);
-  position:relative;
-}
-.dossier-card::before{
-  content:'OPEN ACCESS';
-  position:absolute;
-  top:1rem;right:1rem;
-  font-family:'JetBrains Mono',monospace;
-  font-size:.6rem;
-  letter-spacing:.2em;
-  color:var(--stain);
-  border:1px solid var(--stain);
-  padding:.2rem .5rem;
-  transform:rotate(4deg);
-  background:var(--paper);
-}
-.dossier-card h3{
-  font-family:'Fraunces',serif;
-  font-variation-settings:"SOFT" 40,"WONK" 1;
-  font-weight:900;
-  font-size:2rem;
-  line-height:1;
-  margin-bottom:1rem;
-  letter-spacing:-.02em;
-}
-.dossier-card p{
-  font-family:'Fraunces',serif;
-  font-size:1.05rem;
-  color:var(--ink-soft);
-  line-height:1.55;
-  margin-bottom:2rem;
-}
-.dossier-card .btn{width:100%;justify-content:center}
-
-@media (max-width:900px){
-  .dossier{grid-template-columns:1fr;gap:3rem;padding:4rem 1.5rem}
-  .dossier-quote::before{top:-2rem;left:-.5rem;font-size:5rem}
-}
-
-/* COLOPHON — Redesigned */
-.colophon{
-  position:relative;z-index:2;
-  background:var(--ink);
-  color:var(--paper-dark);
-  padding:5rem 2.5rem 2rem;
-}
-.colophon-inner{max-width:1400px;margin:0 auto}
-.colophon-top{
-  display:grid;
-  grid-template-columns:1.4fr 1fr 1fr 1fr;
-  gap:4rem;
-  padding-bottom:3.5rem;
-  border-bottom:1px solid rgba(244,241,234,.12);
-}
-.colophon-brand h4{
-  font-family:'Fraunces',serif;
-  font-variation-settings:"SOFT" 40,"WONK" 1;
-  font-weight:900;
-  font-size:2rem;
-  line-height:1;
-  margin-bottom:.8rem;
-  color:var(--paper);
-  letter-spacing:-.01em;
-}
-.colophon-brand h4 em{font-style:italic;font-weight:400;color:var(--stain)}
-.colophon-brand p{
-  font-family:'Fraunces',serif;
-  font-style:italic;
-  font-size:1rem;
-  color:rgba(244,241,234,.55);
-  max-width:400px;
-  line-height:1.55;
-  margin-bottom:1.5rem;
-}
-.colophon-tag{
-  display:inline-flex;
-  align-items:center;
-  gap:.5rem;
-  font-family:'JetBrains Mono',monospace;
-  font-size:.68rem;
-  letter-spacing:.12em;
-  text-transform:uppercase;
-  color:var(--fluor);
-  border:1px solid rgba(74,143,95,.4);
-  padding:.4rem .7rem;
-  border-radius:2px;
-}
-.colophon-tag::before{
-  content:'';width:6px;height:6px;border-radius:50%;background:var(--fluor);
-  animation:blink 2s infinite;
-}
-.colophon-col h5{
-  font-family:'JetBrains Mono',monospace;
-  font-size:.68rem;
-  letter-spacing:.15em;
-  text-transform:uppercase;
-  color:var(--stain);
-  margin-bottom:1.2rem;
-  font-weight:500;
-}
-.colophon-col ul{list-style:none}
-.colophon-col li{margin-bottom:.65rem}
-.colophon-col a{
-  font-family:'Fraunces',serif;
-  font-size:.98rem;
-  color:rgba(244,241,234,.72);
-  border-bottom:none;
-  transition:color .15s;
-}
-.colophon-col a:hover{color:var(--paper);background:transparent}
-.colophon-bottom{
-  padding-top:1.8rem;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  font-family:'JetBrains Mono',monospace;
-  font-size:.68rem;
-  letter-spacing:.08em;
-  color:rgba(244,241,234,.35);
-  flex-wrap:wrap;
-  gap:1rem;
-}
-.colophon-bottom .meta-right{
-  display:flex;
-  gap:1.5rem;
-  align-items:center;
-}
-.colophon-bottom .meta-right span{
-  color:rgba(244,241,234,.35);
-}
-@media (max-width:900px){
-  .colophon{padding:3.5rem 1.5rem 2rem}
-  .colophon-top{grid-template-columns:1fr 1fr;gap:2.5rem}
-  .colophon-brand{grid-column:1/-1;margin-bottom:1rem}
-  .colophon-bottom{flex-direction:column;align-items:flex-start}
-}
-
-/* HERO ILLUS */
-.hero-illus{
-  position:relative;
-  width:100%;
-  aspect-ratio:1;
-  max-width:380px;
-}
-.hero-illus svg{width:100%;height:100%;display:block}
-
-.reveal{opacity:0;transform:translateY(20px);transition:opacity .7s ease,transform .7s ease}
-.reveal.in{opacity:1;transform:none}
-</style>
+    /* ——— Ledger ——— */
+    #ledger-list {
+      font-family: 'Inter Tight', sans-serif;
+      font-size: 0.9rem;
+      color: var(--text-secondary, #555);
+    }
+  </style>
 </head>
 <body>
 
-<!-- MASTHEAD -->
-<header class="masthead">
-  <div class="mast-left">
-    <div class="mast-issue">Vol. I · № 003</div>
-    <div class="mast-title">
-      WombDAO
-      <em>Journal of Decentralized Ectogenesis</em>
+  <!-- ——— Masthead ——— -->
+  <header class="masthead">
+    <div class="mast-title">WombDAO Journal of Decentralized Ectogenesis</div>
+    <nav>
+      <a href="/agent">Agent</a>
+      <a href="/docs">API Docs</a>
+      <a href="#datasets">Datasets</a>
+      <a href="#ledger">Ledger</a>
+      <a href="/for-agents">For Agents</a>
+    </nav>
+  </header>
+
+  <!-- ——— Hero ——— -->
+  <section class="hero">
+    <div class="overline">Filed under <span class="stamp">Agent-Native · No Extension Required</span></div>
+    <h1>A wet-lab <em>notebook</em>, readable by <span class="annotated">humans and agents</span>.</h1>
+    <p class="lede">156+ NCBI GEO datasets on ectogenesis, a grounded AI agent that cites its sources, and a transparent governance ledger — all accessible via a public REST API.</p>
+    <div class="actions">
+      <a href="/agent" class="primary">Open Web Agent</a>
+      <a href="/docs" class="outline">Read the API</a>
+      <a href="/connect" class="outline">Connect Agent →</a>
     </div>
-  </div>
-  <nav class="mast-nav">
-    <a href="#apparatus">Apparatus</a>
-    <a href="#datasets">Datasets</a>
-    <a href="#protocol">Protocol</a>
-    <a href="#ledger">Ledger</a>
-  </nav>
-  <div class="mast-right">
-    <div class="mast-date">April 2026<br>Open Access</div>
-  </div>
-</header>
+    <p class="footnote">Genomics sourced from NCBI GEO. Public REST API. No API key required.</p>
+  </section>
 
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-title-area">
-    <div class="hero-overline">
-      <span>Filed under</span>
-      <span class="stamp">Ectogenesis · Open Science</span>
-    </div>
-
-    <h1>
-      A wet-lab <em>notebook</em>,<br>
-      kept in <span class="annotated">full public view</span>.
-    </h1>
-
-    <p class="hero-lede">
-      WombDAO is a working archive of ectogenesis research — <strong>real NCBI genomics datasets</strong>, an AI reading-room for the literature, and a transparent ledger of proposals that shape what we study next. <em>No synthetic data. No hype.</em> Just the science, annotated in public.
-    </p>
-
-    <div class="hero-actions">
-      <a href="#protocol" class="btn">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
-        Install Extension
-      </a>
-      <a href="#datasets" class="btn outline">Read the Archive →</a>
-    </div>
-
-    <p class="hero-footnote">
-      <sup>*</sup> Genomics sourced from NCBI Gene Expression Omnibus (GEO) under public-domain access. Every proposal, dataset addition, and vote is logged to a public ledger and open for review.
-    </p>
-  </div>
-
-  <aside class="hero-meta">
-    <div class="hero-illus">
-      <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <radialGradient id="embryo-g" cx="50%" cy="45%" r="50%">
-            <stop offset="0%" stop-color="#f4f1ea"/>
-            <stop offset="60%" stop-color="#ebe6d9"/>
-            <stop offset="100%" stop-color="#c9c2b3"/>
-          </radialGradient>
-          <pattern id="dots" width="8" height="8" patternUnits="userSpaceOnUse">
-            <circle cx="1" cy="1" r=".8" fill="#1a1816" opacity=".35"/>
-          </pattern>
-        </defs>
-
-        <circle cx="200" cy="200" r="180" fill="none" stroke="#1a1816" stroke-width="1" opacity=".3" stroke-dasharray="2 4"/>
-        <circle cx="200" cy="200" r="140" fill="none" stroke="#1a1816" stroke-width="1" opacity=".25"/>
-        <circle cx="200" cy="200" r="100" fill="none" stroke="#1a1816" stroke-width="1" opacity=".2" stroke-dasharray="4 2"/>
-
-        <line x1="200" y1="10" x2="200" y2="60" stroke="#1a1816" stroke-width="1" opacity=".4"/>
-        <line x1="200" y1="340" x2="200" y2="390" stroke="#1a1816" stroke-width="1" opacity=".4"/>
-        <line x1="10" y1="200" x2="60" y2="200" stroke="#1a1816" stroke-width="1" opacity=".4"/>
-        <line x1="340" y1="200" x2="390" y2="200" stroke="#1a1816" stroke-width="1" opacity=".4"/>
-
-        <g transform="translate(200,200)">
-          <circle cx="0" cy="0" r="85" fill="url(#embryo-g)" stroke="#1a1816" stroke-width="1.5"/>
-          <circle cx="0" cy="0" r="85" fill="url(#dots)" opacity=".3"/>
-          <ellipse cx="-25" cy="-20" rx="40" ry="35" fill="#c73e3a" opacity=".15" stroke="#c73e3a" stroke-width="1.2"/>
-          <circle cx="-30" cy="-25" r="10" fill="#f4f1ea" stroke="#1a1816" stroke-width="1"/>
-          <circle cx="-12" cy="-30" r="9" fill="#f4f1ea" stroke="#1a1816" stroke-width="1"/>
-          <circle cx="-38" cy="-8" r="8" fill="#f4f1ea" stroke="#1a1816" stroke-width="1"/>
-          <circle cx="-18" cy="-12" r="11" fill="#f4f1ea" stroke="#1a1816" stroke-width="1"/>
-          <circle cx="-5" cy="-18" r="7" fill="#f4f1ea" stroke="#1a1816" stroke-width="1"/>
-          <circle cx="-30" cy="-25" r="3" fill="#1a1816"/>
-          <circle cx="-12" cy="-30" r="2.5" fill="#1a1816"/>
-          <circle cx="-38" cy="-8" r="2.5" fill="#1a1816"/>
-          <circle cx="-18" cy="-12" r="3" fill="#1a1816"/>
-          <circle cx="-5" cy="-18" r="2" fill="#1a1816"/>
-          <g stroke="#1a1816" stroke-width=".8" fill="#f4f1ea" opacity=".8">
-            <circle cx="40" cy="-40" r="6"/>
-            <circle cx="55" cy="-15" r="7"/>
-            <circle cx="60" cy="15" r="6"/>
-            <circle cx="50" cy="40" r="7"/>
-            <circle cx="25" cy="55" r="6"/>
-            <circle cx="-5" cy="60" r="7"/>
-            <circle cx="-30" cy="55" r="6"/>
-            <circle cx="-50" cy="35" r="7"/>
-            <circle cx="-60" cy="8" r="6"/>
-            <circle cx="-55" cy="-20" r="7"/>
-            <circle cx="-40" cy="-45" r="6"/>
-            <circle cx="-15" cy="-55" r="7"/>
-            <circle cx="15" cy="-55" r="6"/>
-          </g>
-        </g>
-
-        <g font-family="JetBrains Mono, monospace" font-size="9" fill="#1a1816">
-          <line x1="140" y1="170" x2="80" y2="130" stroke="#c73e3a" stroke-width=".8"/>
-          <circle cx="140" cy="170" r="2" fill="#c73e3a"/>
-          <text x="75" y="125" text-anchor="end" fill="#c73e3a">inner cell mass</text>
-          <line x1="260" y1="185" x2="320" y2="160" stroke="#1a1816" stroke-width=".8"/>
-          <circle cx="260" cy="185" r="2" fill="#1a1816"/>
-          <text x="325" y="156">trophoblast</text>
-          <line x1="205" y1="290" x2="230" y2="340" stroke="#2e7d8a" stroke-width=".8"/>
-          <circle cx="205" cy="290" r="2" fill="#2e7d8a"/>
-          <text x="235" y="345" fill="#2e7d8a">blastocoel</text>
-        </g>
-
-        <g transform="translate(30,370)">
-          <line x1="0" y1="0" x2="60" y2="0" stroke="#1a1816" stroke-width="2"/>
-          <line x1="0" y1="-4" x2="0" y2="4" stroke="#1a1816" stroke-width="2"/>
-          <line x1="60" y1="-4" x2="60" y2="4" stroke="#1a1816" stroke-width="2"/>
-          <text x="30" y="16" font-family="JetBrains Mono,monospace" font-size="9" fill="#1a1816" text-anchor="middle">100 μm</text>
-        </g>
-
-        <text x="370" y="30" font-family="JetBrains Mono,monospace" font-size="10" fill="#c73e3a" text-anchor="end" letter-spacing="2">FIG. 01</text>
-      </svg>
-    </div>
-
-    <div class="specimen-label">
-      <div class="row"><span class="k">Subject</span><span class="v">H. sapiens</span></div>
-      <div class="row"><span class="k">Stage</span><span class="v italic">Blastocyst</span></div>
-      <div class="row"><span class="k">Method</span><span class="v">scRNA-seq</span></div>
-      <div class="row"><span class="k">Source</span><span class="v">NCBI GEO</span></div>
-      <div class="row"><span class="k">Access</span><span class="v hot">Public</span></div>
-      <div class="row"><span class="k">Status</span><span class="v live">Recording</span></div>
-    </div>
-  </aside>
-</section>
-
-<!-- TICKER -->
-<div class="ticker">
-  <div class="ticker-track">
-    <span class="ticker-item">GSE36552 · 124 cells sequenced</span>
-    <span class="ticker-item">Proposal #007 — now reviewing</span>
-    <span class="ticker-item">156 datasets indexed</span>
-    <span class="ticker-item">42 agents connected today</span>
-    <span class="ticker-item">NANOG peaks @ morula stage</span>
-    <span class="ticker-item">Open source · MIT licensed</span>
-    <span class="ticker-item">GSE36552 · 124 cells sequenced</span>
-    <span class="ticker-item">Proposal #007 — now reviewing</span>
-    <span class="ticker-item">156 datasets indexed</span>
-    <span class="ticker-item">42 agents connected today</span>
-    <span class="ticker-item">NANOG peaks @ morula stage</span>
-    <span class="ticker-item">Open source · MIT licensed</span>
-  </div>
-</div>
-
-<!-- FIGURES -->
-<div class="figures">
-  <div class="figure">
-    <div class="figure-num">Fig. 02a</div>
-    <div class="figure-value" data-count="42">0<span class="unit"> agents</span></div>
-    <div class="figure-label">connected research instances, last 24h</div>
-    <div class="figure-spark">
-      <span style="height:30%"></span><span style="height:50%"></span><span style="height:40%"></span><span style="height:70%"></span><span style="height:60%"></span><span style="height:85%"></span><span style="height:95%"></span>
-    </div>
-  </div>
-  <div class="figure">
-    <div class="figure-num">Fig. 02b</div>
-    <div class="figure-value" data-count="156">0<span class="unit"> GSE</span></div>
-    <div class="figure-label">genomics datasets indexed from GEO</div>
-    <div class="figure-spark">
-      <span style="height:20%"></span><span style="height:35%"></span><span style="height:45%"></span><span style="height:55%"></span><span style="height:70%"></span><span style="height:80%"></span><span style="height:100%"></span>
-    </div>
-  </div>
-  <div class="figure">
-    <div class="figure-num">Fig. 02c</div>
-    <div class="figure-value" data-count="7">0<span class="unit"> open</span></div>
-    <div class="figure-label">proposals under active review</div>
-    <div class="figure-spark">
-      <span style="height:60%"></span><span style="height:40%"></span><span style="height:80%"></span><span style="height:30%"></span><span style="height:65%"></span><span style="height:90%"></span><span style="height:50%"></span>
-    </div>
-  </div>
-  <div class="figure">
-    <div class="figure-num">Fig. 02d</div>
-    <div class="figure-value" data-count="2341">0<span class="unit"> members</span></div>
-    <div class="figure-label">researchers contributing to the archive</div>
-    <div class="figure-spark">
-      <span style="height:10%"></span><span style="height:25%"></span><span style="height:40%"></span><span style="height:50%"></span><span style="height:75%"></span><span style="height:88%"></span><span style="height:100%"></span>
-    </div>
-  </div>
-</div>
-
-<!-- APPARATUS -->
-<section class="section" id="apparatus">
-  <div class="section-header">
-    <div class="section-marker">Chapter I<br><br>Apparatus</div>
-    <div class="section-intro">
-      <h2>Three instruments. <em>One open laboratory.</em></h2>
-      <p>The WombDAO extension is an in-browser lab bench. It pulls live data from NCBI, runs a literature-trained agent over it, and settles research decisions in an auditable public ledger.</p>
+  <!-- ——— Ticker ——— -->
+  <div class="ticker">
+    <div class="ticker-track">
+      <span class="ticker-item">156 datasets indexed</span>
+      <span class="ticker-item">Public API live at /api</span>
+      <span class="ticker-item">Grounded agent at /agent</span>
+      <span class="ticker-item">OpenAPI 3.0 spec available</span>
+      <span class="ticker-item">JSON-LD structured data</span>
+      <span class="ticker-item">MIT licensed · Open ledger</span>
+      <span class="ticker-item">156 datasets indexed</span>
+      <span class="ticker-item">Public API live at /api</span>
+      <span class="ticker-item">Grounded agent at /agent</span>
+      <span class="ticker-item">OpenAPI 3.0 spec available</span>
+      <span class="ticker-item">JSON-LD structured data</span>
+      <span class="ticker-item">MIT licensed · Open ledger</span>
     </div>
   </div>
 
-  <div class="apparatus">
-    <article class="app-card">
-      <div class="app-num">Instrument 001</div>
-      <div class="app-diagram">
-        <svg viewBox="0 0 120 100" fill="none" stroke="#1a1816" stroke-width="1.2">
-          <rect x="45" y="15" width="30" height="12" fill="#c73e3a" opacity=".2"/>
-          <rect x="45" y="15" width="30" height="12"/>
-          <line x1="60" y1="27" x2="60" y2="45"/>
-          <circle cx="60" cy="50" r="6" fill="#f4f1ea"/>
-          <circle cx="60" cy="50" r="2" fill="#1a1816"/>
-          <rect x="30" y="60" width="60" height="4"/>
-          <rect x="25" y="64" width="70" height="3" fill="#1a1816"/>
-          <line x1="40" y1="67" x2="40" y2="85"/>
-          <line x1="80" y1="67" x2="80" y2="85"/>
-          <rect x="25" y="85" width="70" height="8" fill="#1a1816"/>
-          <text x="60" y="10" font-family="JetBrains Mono,monospace" font-size="6" fill="#c73e3a" text-anchor="middle" letter-spacing="1">SPECIMEN</text>
-        </svg>
-      </div>
-      <h3>Primary <em>source</em> data</h3>
-      <p>No synthetic examples. WombDAO reads directly from NCBI's Gene Expression Omnibus — the same RNA-seq and single-cell datasets cited in peer-reviewed embryology journals.</p>
-      <div class="app-tags"><span>ncbi-geo</span><span>rna-seq</span><span>scrna-seq</span><span>peer-reviewed</span></div>
-    </article>
-
-    <article class="app-card">
-      <div class="app-num">Instrument 002</div>
-      <div class="app-diagram">
-        <svg viewBox="0 0 120 100" fill="none" stroke="#1a1816" stroke-width="1.2">
-          <circle cx="25" cy="30" r="6" fill="#f4f1ea"/>
-          <circle cx="25" cy="50" r="6" fill="#f4f1ea"/>
-          <circle cx="25" cy="70" r="6" fill="#f4f1ea"/>
-          <circle cx="60" cy="25" r="7" fill="#c73e3a" opacity=".15"/>
-          <circle cx="60" cy="50" r="7" fill="#c73e3a" opacity=".3"/>
-          <circle cx="60" cy="75" r="7" fill="#c73e3a" opacity=".15"/>
-          <circle cx="95" cy="40" r="6" fill="#f4f1ea"/>
-          <circle cx="95" cy="60" r="6" fill="#f4f1ea"/>
-          <g opacity=".5">
-            <line x1="31" y1="30" x2="53" y2="25"/>
-            <line x1="31" y1="30" x2="53" y2="50"/>
-            <line x1="31" y1="50" x2="53" y2="25"/>
-            <line x1="31" y1="50" x2="53" y2="50"/>
-            <line x1="31" y1="50" x2="53" y2="75"/>
-            <line x1="31" y1="70" x2="53" y2="50"/>
-            <line x1="31" y1="70" x2="53" y2="75"/>
-            <line x1="67" y1="25" x2="89" y2="40"/>
-            <line x1="67" y1="50" x2="89" y2="40"/>
-            <line x1="67" y1="50" x2="89" y2="60"/>
-            <line x1="67" y1="75" x2="89" y2="60"/>
-          </g>
-        </svg>
-      </div>
-      <h3>A reading-room <em>agent</em></h3>
-      <p>Free models via OpenRouter, grounded in the indexed GEO archive. Ask about gene expression, compare embryonic stages, cite the source in one click. Local-first, no telemetry.</p>
-      <div class="app-tags"><span>openrouter</span><span>rag</span><span>grounded</span><span>local-first</span></div>
-    </article>
-
-    <article class="app-card">
-      <div class="app-num">Instrument 003</div>
-      <div class="app-diagram">
-        <svg viewBox="0 0 120 100" fill="none" stroke="#1a1816" stroke-width="1.2">
-          <line x1="60" y1="15" x2="60" y2="50"/>
-          <line x1="25" y1="25" x2="95" y2="25"/>
-          <line x1="25" y1="25" x2="25" y2="40"/>
-          <line x1="95" y1="25" x2="95" y2="40"/>
-          <polygon points="15,50 35,50 30,40 20,40" fill="#c73e3a" opacity=".3"/>
-          <polygon points="15,50 35,50 30,40 20,40"/>
-          <polygon points="85,45 105,45 100,35 90,35" fill="#2e7d8a" opacity=".3"/>
-          <polygon points="85,45 105,45 100,35 90,35"/>
-          <rect x="55" y="50" width="10" height="30" fill="#1a1816"/>
-          <rect x="40" y="80" width="40" height="6" fill="#1a1816"/>
-          <text x="25" y="62" font-family="JetBrains Mono,monospace" font-size="7" fill="#c73e3a" text-anchor="middle" font-weight="600">YES</text>
-          <text x="95" y="58" font-family="JetBrains Mono,monospace" font-size="7" fill="#2e7d8a" text-anchor="middle" font-weight="600">NO</text>
-        </svg>
-      </div>
-      <h3>Governance in <em>public view</em></h3>
-      <p>Contributors propose funding, dataset additions, and research priorities. Every tally is logged, versioned, and reviewable. No closed-door votes, no shadow decisions.</p>
-      <div class="app-tags"><span>open-ledger</span><span>auditable</span><span>versioned</span><span>transparent</span></div>
-    </article>
-  </div>
-</section>
-
-<!-- DATASETS -->
-<section class="section" id="datasets">
-  <div class="section-header">
-    <div class="section-marker">Chapter II<br><br>Sample Sheet</div>
-    <div class="section-intro">
-      <h2>Indexed datasets, <em>cited in situ</em>.</h2>
-      <p>A running log of the genomics archives currently loaded into the agent. Each entry links back to its GEO accession — verify, re-analyze, disagree in public.</p>
+  <!-- ——— Figures ——— -->
+  <div class="figures">
+    <div class="figure-card">
+      <div class="fig-label">Fig 01</div>
+      <div class="fig-number" data-count="156">0</div>
+      <div class="fig-desc">GSE datasets</div>
+    </div>
+    <div class="figure-card">
+      <div class="fig-label">Fig 02</div>
+      <div class="fig-number" data-count="6">0</div>
+      <div class="fig-desc">Endpoints</div>
+    </div>
+    <div class="figure-card">
+      <div class="fig-label">Fig 03</div>
+      <div class="fig-number" data-count="2">0</div>
+      <div class="fig-desc">Open proposals</div>
+    </div>
+    <div class="figure-card">
+      <div class="fig-label">Fig 04</div>
+      <div class="fig-number" data-count="2341">0</div>
+      <div class="fig-desc">Members</div>
     </div>
   </div>
 
-  <div class="samples-table">
-    <div class="samples-head">
-      <div>Accession</div>
-      <div>Title</div>
-      <div>Assay</div>
-      <div>n</div>
-      <div>Deposited</div>
-      <div></div>
-    </div>
-
-    <a href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE36552" target="_blank" rel="noopener" class="sample-row">
-      <div class="sample-acc">GSE36552</div>
-      <div class="sample-title">Single-cell RNA-seq of human preimplantation embryos, from zygote to blastocyst</div>
-      <div class="sample-type">scRNA-seq</div>
-      <div class="sample-n">124</div>
-      <div class="sample-year">2013 · Yan L, et al.</div>
-      <div class="sample-arrow">→</div>
-    </a>
-
-    <a href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE44183" target="_blank" rel="noopener" class="sample-row">
-      <div class="sample-acc">GSE44183</div>
-      <div class="sample-title">Transcriptome of human pre-implantation embryos at single-cell resolution</div>
-      <div class="sample-type">bulk RNA-seq</div>
-      <div class="sample-n">67</div>
-      <div class="sample-year">2013 · Xue Z, et al.</div>
-      <div class="sample-arrow">→</div>
-    </a>
-
-    <a href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE101571" target="_blank" rel="noopener" class="sample-row">
-      <div class="sample-acc">GSE101571</div>
-      <div class="sample-title">Single-cell transcriptomics of human blastocysts during implantation</div>
-      <div class="sample-type">scRNA-seq</div>
-      <div class="sample-n">88</div>
-      <div class="sample-year">2019 · Zhou F, et al.</div>
-      <div class="sample-arrow">→</div>
-    </a>
-
-    <a href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE109555" target="_blank" rel="noopener" class="sample-row">
-      <div class="sample-acc">GSE109555</div>
-      <div class="sample-title">Lineage specification in human preimplantation embryos via DNA methylation</div>
-      <div class="sample-type">WGBS</div>
-      <div class="sample-n">152</div>
-      <div class="sample-year">2018 · Zhu P, et al.</div>
-      <div class="sample-arrow">→</div>
-    </a>
-  </div>
-
-  <p class="ncbi-note">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
-    Four of one hundred fifty-six indexed. The full archive ships with the extension — <a href="https://www.ncbi.nlm.nih.gov/geo/" target="_blank" rel="noopener">cross-reference at NCBI GEO</a>.
-  </p>
-</section>
-
-<!-- PROTOCOL -->
-<section class="section" id="protocol">
-  <div class="section-header">
-    <div class="section-marker">Chapter III<br><br>Protocol</div>
-    <div class="section-intro">
-      <h2>Four steps from install <em>to contribution</em>.</h2>
-      <p>A short protocol, kept honest. No accounts in the extension, no servers in the middle, no shadow telemetry. Read what you run.</p>
-    </div>
-  </div>
-
-  <div class="protocol">
-    <div class="protocol-steps">
-      <div class="protocol-step">
-        <div>
-          <h4>Install the Chrome extension</h4>
-          <p>Load WombDAO from the Chrome Web Store. Thirty seconds, zero accounts. The extension runs entirely client-side.</p>
-        </div>
+  <!-- ——— Chapter I: Apparatus ——— -->
+  <section id="apparatus">
+    <div class="section-label">Chapter I &mdash; Apparatus</div>
+    <h2>Three surfaces. One open laboratory.</h2>
+    <div class="app-grid">
+      <div class="app-card">
+        <div class="surface-id">Surface 001</div>
+        <h3>Primary source data</h3>
+        <p>156+ ectogenesis datasets sourced from NCBI GEO, indexed and served via a JSON API. Every record links back to its original accession.</p>
       </div>
-      <div class="protocol-step">
-        <div>
-          <h4>Search the GEO archive</h4>
-          <p>Query by gene, by developmental stage, by author. Results stream from the indexed vector store with citations attached.</p>
-        </div>
+      <div class="app-card">
+        <div class="surface-id">Surface 002</div>
+        <h3>A grounded agent, in the browser</h3>
+        <p>Ask questions at <a href="/agent">/agent</a>. Every answer cites its sources. Toggle agent mode for structured, machine-readable responses.</p>
       </div>
-      <div class="protocol-step">
-        <div>
-          <h4>Reason with the agent</h4>
-          <p>Ask follow-ups grounded in the data. Export the conversation to Markdown with inline GEO accessions for your lab notebook.</p>
-        </div>
-      </div>
-      <div class="protocol-step">
-        <div>
-          <h4>Propose and review</h4>
-          <p>Submit new datasets, flag findings, weigh in on open proposals. Every contribution is logged in the public ledger.</p>
-        </div>
+      <div class="app-card">
+        <div class="surface-id">Surface 003</div>
+        <h3>Governance in public view</h3>
+        <p>The ledger records every proposal and vote. Queryable at the proposals API. No hidden state.</p>
       </div>
     </div>
+  </section>
 
-    <div class="terminal-panel">
-      <div class="terminal-head">
-        <span>wombdao · agent</span>
-        <div class="dots"><span></span><span></span><span></span></div>
-      </div>
-      <div class="terminal-line"><span class="prompt">></span> <span class="dim">query:</span> NANOG expression by developmental stage</div>
-      <div class="terminal-line"><span class="dim">searching GEO index...</span></div>
-      <div class="terminal-line"><span class="cy">hit</span> GSE36552 · 124 cells · scRNA-seq</div>
-      <div class="terminal-line"><span class="cy">hit</span> GSE44183 · 67 samples · bulk</div>
-      <div class="terminal-line"></div>
-      <div class="terminal-line"><span class="prompt">></span> finding:</div>
-      <div class="terminal-line">&nbsp;&nbsp;NANOG peaks at <span class="hl">morula</span> stage,</div>
-      <div class="terminal-line">&nbsp;&nbsp;declines post-implantation</div>
-      <div class="terminal-line">&nbsp;&nbsp;<span class="dim">(Yan L et al., 2013, Fig. 3c)</span></div>
-      <div class="terminal-line"></div>
-      <div class="terminal-line"><span class="prompt">></span> <span class="dim">cite: GSE36552 → notebook.md ✓</span></div>
-      <div class="terminal-line"><span class="prompt">></span> <span class="terminal-cursor"></span></div>
-    </div>
-  </div>
-</section>
+  <!-- ——— Chapter II: Sample Sheet ——— -->
+  <section id="datasets">
+    <div class="section-label">Chapter II &mdash; Sample Sheet</div>
+    <h2>Indexed datasets, cited in situ.</h2>
+    <table class="samples-table">
+      <thead>
+        <tr>
+          <th>Accession</th>
+          <th>Title</th>
+          <th>Organism</th>
+          <th>Samples</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr itemscope itemtype="https://schema.org/Dataset">
+          <td><a href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE36552" itemprop="identifier">GSE36552</a></td>
+          <td itemprop="name">Single-cell RNA-seq of human preimplantation embryos</td>
+          <td>Homo sapiens</td>
+          <td>124</td>
+        </tr>
+        <tr itemscope itemtype="https://schema.org/Dataset">
+          <td><a href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE44183" itemprop="identifier">GSE44183</a></td>
+          <td itemprop="name">Transcriptome of human and mouse early embryos</td>
+          <td>Homo sapiens / Mus musculus</td>
+          <td>56</td>
+        </tr>
+        <tr itemscope itemtype="https://schema.org/Dataset">
+          <td><a href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE101571" itemprop="identifier">GSE101571</a></td>
+          <td itemprop="name">Human embryo implantation-stage transcriptomics</td>
+          <td>Homo sapiens</td>
+          <td>286</td>
+        </tr>
+        <tr itemscope itemtype="https://schema.org/Dataset">
+          <td><a href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE109555" itemprop="identifier">GSE109555</a></td>
+          <td itemprop="name">Single-cell analysis of human trophoblast stem cells</td>
+          <td>Homo sapiens</td>
+          <td>192</td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="note">Four of 156 shown. Full archive at <a href="/api/datasets">/api/datasets</a>.</p>
+  </section>
 
-<!-- LEDGER -->
-<section class="section" id="ledger">
-  <div class="section-header">
-    <div class="section-marker">Chapter IV<br><br>The Ledger</div>
-    <div class="section-intro">
-      <h2>Proposals, <em>tallied in public</em>.</h2>
-      <p>Every funding decision, dataset addition, and protocol change lives here. Read the case, review the evidence, weigh in.</p>
-    </div>
-  </div>
-
-  <div class="ledger">
-    <div class="ledger-entry">
-      <div class="ledger-meta">
-        <div class="ledger-id">#007</div>
-        <span class="ledger-status status-open">Open · Apr 20</span>
-      </div>
-      <div class="ledger-body">
-        <h4>Fund artificial <em>placenta vasculature</em> study at MIT Media Lab</h4>
-        <p>Allocate community research credits to Dr. Chen's group for a twelve-month study of microvascular scaffolding in ex-utero support systems. Milestones posted quarterly, deliverables released on verification.</p>
-        <span class="proposer">proposed by contributor-0472 · 3 days ago</span>
-      </div>
-      <div class="ledger-votes">
-        <div class="vote-numbers">
-          <span class="vote-yes">Yes · 79.5%</span>
-          <span class="vote-no">No · 20.5%</span>
-        </div>
-        <div class="vote-bar">
-          <div class="vote-bar-yes" style="width:79.5%"></div>
-          <div class="vote-bar-no" style="width:20.5%"></div>
-        </div>
-        <div class="vote-tally"><span>1,240 of 1,560 reviews</span><span>quorum ✓</span></div>
-      </div>
-    </div>
-
-    <div class="ledger-entry">
-      <div class="ledger-meta">
-        <div class="ledger-id">#008</div>
-        <span class="ledger-status status-open">Open · Apr 25</span>
-      </div>
-      <div class="ledger-body">
-        <h4>Index GSE109555 <em>methylation</em> dataset into the agent</h4>
-        <p>Add whole-genome bisulfite sequencing from Zhu P et al. (2018) to the vector store. Expands agent coverage to epigenetic lineage specification across 152 embryo samples.</p>
-        <span class="proposer">proposed by contributor-0891 · 1 week ago</span>
-      </div>
-      <div class="ledger-votes">
-        <div class="vote-numbers">
-          <span class="vote-yes">Yes · 89.0%</span>
-          <span class="vote-no">No · 11.0%</span>
-        </div>
-        <div class="vote-bar">
-          <div class="vote-bar-yes" style="width:89%"></div>
-          <div class="vote-bar-no" style="width:11%"></div>
-        </div>
-        <div class="vote-tally"><span>890 of 1,000 reviews</span><span>quorum ✓</span></div>
+  <!-- ——— Chapter III: Protocol ——— -->
+  <section id="protocol">
+    <div class="section-label">Chapter III &mdash; Protocol</div>
+    <h2>Four steps from open tab to contribution.</h2>
+    <div class="protocol-grid">
+      <ol class="protocol-steps">
+        <li>Open the web agent at <a href="/agent">/agent</a> and ask a question about ectogenesis.</li>
+        <li>Review the cited sources — every claim links to its NCBI GEO accession.</li>
+        <li>Explore the API at <a href="/docs">/docs</a> to integrate datasets into your own pipeline.</li>
+        <li>Submit a governance proposal via the ledger to shape the research agenda.</li>
+      </ol>
+      <div class="terminal-panel">
+        <div class="comment"># Query the agent via API</div>
+        <div><span class="prompt">$</span> curl -X POST https://wombdao.org/api/chat \</div>
+        <div>&nbsp;&nbsp;-H "Content-Type: application/json" \</div>
+        <div>&nbsp;&nbsp;-d '{"message": "What datasets cover trophoblast differentiation?"}'</div>
       </div>
     </div>
+  </section>
 
-    <div class="ledger-entry">
-      <div class="ledger-meta">
-        <div class="ledger-id">#001</div>
-        <span class="ledger-status status-closed">Passed · Mar 15</span>
-      </div>
-      <div class="ledger-body">
-        <h4>Establish the <em>public archive</em> and review process</h4>
-        <p>Genesis proposal. Formalize the ledger, reviewer eligibility, and citation standards. Set the precedent that every dataset, every finding, every decision is filed in public.</p>
-        <span class="proposer">proposed by contributor-0001 · 3 weeks ago</span>
-      </div>
-      <div class="ledger-votes">
-        <div class="vote-numbers">
-          <span class="vote-yes">Yes · 96.1%</span>
-          <span class="vote-no">No · 3.9%</span>
-        </div>
-        <div class="vote-bar">
-          <div class="vote-bar-yes" style="width:96.1%"></div>
-          <div class="vote-bar-no" style="width:3.9%"></div>
-        </div>
-        <div class="vote-tally"><span>2,210 of 2,300 reviews</span><span>executed ✓</span></div>
-      </div>
+  <!-- ——— Chapter IV: The Ledger ——— -->
+  <section id="ledger">
+    <div class="section-label">Chapter IV &mdash; The Ledger</div>
+    <h2>Proposals, tallied in public.</h2>
+    <div id="ledger-list">Loading ledger&hellip;</div>
+  </section>
+
+  <!-- ——— Dossier ——— -->
+  <section class="dossier">
+    <blockquote>&ldquo;The womb outside the body is not a metaphor. It is an engineering problem — and the data to solve it should be open.&rdquo;</blockquote>
+    <div class="cta-card">
+      <a href="/agent" class="primary">Open Web Agent</a>
+      <a href="/docs" class="outline">Read the API</a>
+      <a href="/connect" class="outline">Connect Your Agent</a>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- DOSSIER -->
-<section class="dossier">
-  <blockquote class="dossier-quote">
-    The womb outside the body is not a metaphor. It is an engineering problem, and engineering problems are solved in the open — with citations, with ledgers, with other minds.
-    <cite>WombDAO charter · Preamble</cite>
-  </blockquote>
-
-  <div class="dossier-card">
-    <h3>Read the archive. Run an experiment.</h3>
-    <p>The extension is free. The datasets are public. The ledger is open. If you have read this far, you are qualified to participate.</p>
-    <a href="#" class="btn">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
-      Install for Chrome
-    </a>
-  </div>
-</section>
-
-<!-- COLOPHON -->
-<footer class="colophon">
-  <div class="colophon-inner">
-    <div class="colophon-top">
-      <div class="colophon-brand">
-        <h4>WombDAO <em>Journal</em></h4>
-        <p>A decentralized laboratory notebook for ectogenesis research — open datasets, open models, open governance. Maintained in public since 2026.</p>
-        <span class="colophon-tag">Open Source · MIT Licensed</span>
-      </div>
-      <div class="colophon-col">
-        <h5>The Work</h5>
-        <ul>
-          <li><a href="#apparatus">Apparatus</a></li>
-          <li><a href="#datasets">Datasets</a></li>
-          <li><a href="#protocol">Protocol</a></li>
-          <li><a href="#ledger">The Ledger</a></li>
-        </ul>
-      </div>
-      <div class="colophon-col">
-        <h5>Archive</h5>
-        <ul>
-          <li><a href="https://www.ncbi.nlm.nih.gov/geo/" target="_blank" rel="noopener">NCBI GEO</a></li>
-          <li><a href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE36552" target="_blank" rel="noopener">GSE36552</a></li>
-          <li><a href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE44183" target="_blank" rel="noopener">GSE44183</a></li>
-          <li><a href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE101571" target="_blank" rel="noopener">GSE101571</a></li>
-        </ul>
-      </div>
-      <div class="colophon-col">
-        <h5>Correspondence</h5>
-        <ul>
-          <li><a href="https://twitter.com/womb_dao" target="_blank" rel="noopener">Twitter · @womb_dao</a></li>
-          <li><a href="https://github.com/7abar/womborg" target="_blank" rel="noopener">GitHub</a></li>
-          <li><a href="#" target="_blank">Chrome Web Store</a></li>
-          <li><a href="#ledger">Governance</a></li>
-        </ul>
-      </div>
+  <!-- ——— Colophon ——— -->
+  <footer class="colophon">
+    <div class="badges">
+      <span class="badge">Agent-Friendly</span>
+      <span class="badge">No Extension Required</span>
+      <span class="badge">Public API</span>
+      <span class="badge">Open Ledger</span>
+      <span class="badge">MIT Licensed</span>
     </div>
-    <div class="colophon-bottom">
-      <span>© MMXXVI · WombDAO · Set in Fraunces &amp; JetBrains Mono</span>
-      <div class="meta-right">
-        <span>Vol. I · № 003</span>
-        <span>April 2026</span>
-      </div>
-    </div>
-  </div>
-</footer>
+  </footer>
 
-<script>
-const counters=document.querySelectorAll('.figure-value[data-count]');
-const obs=new IntersectionObserver((entries)=>{
-  entries.forEach(e=>{
-    if(!e.isIntersecting)return;
-    const el=e.target;
-    const target=+el.dataset.count;
-    const unit=el.querySelector('.unit')?.outerHTML||'';
-    const dur=1400;const start=performance.now();
-    const tick=(now)=>{
-      const p=Math.min((now-start)/dur,1);
-      const eased=1-Math.pow(1-p,3);
-      const val=Math.floor(target*eased);
-      el.innerHTML=val.toLocaleString()+unit;
-      if(p<1)requestAnimationFrame(tick);
-    };
-    requestAnimationFrame(tick);
-    obs.unobserve(el);
-  });
-},{threshold:.4});
-counters.forEach(c=>obs.observe(c));
+  <!-- ——— Scripts ——— -->
+  <script>
+    // Counter animation
+    const counters = document.querySelectorAll('.fig-number[data-count]');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const el = entry.target;
+          const target = parseInt(el.getAttribute('data-count'), 10);
+          const duration = 1200;
+          const start = performance.now();
+          function tick(now) {
+            const elapsed = now - start;
+            const progress = Math.min(elapsed / duration, 1);
+            const eased = 1 - Math.pow(1 - progress, 3);
+            el.textContent = Math.floor(eased * target);
+            if (progress < 1) {
+              requestAnimationFrame(tick);
+            } else {
+              el.textContent = target;
+            }
+          }
+          requestAnimationFrame(tick);
+          observer.unobserve(el);
+        }
+      });
+    }, { threshold: 0.3 });
+    counters.forEach(c => observer.observe(c));
 
-document.querySelectorAll('a[href^="#"]').forEach(a=>{
-  a.addEventListener('click',e=>{
-    const id=a.getAttribute('href').slice(1);
-    const el=document.getElementById(id);
-    if(el){e.preventDefault();el.scrollIntoView({behavior:'smooth',block:'start'});}
-  });
-});
+    // Fetch ledger proposals
+    fetch('/api/proposals')
+      .then(res => res.json())
+      .then(data => {
+        const list = document.getElementById('ledger-list');
+        if (!data || !data.length) {
+          list.textContent = 'No proposals found.';
+          return;
+        }
+        const ul = document.createElement('ul');
+        data.forEach(p => {
+          const li = document.createElement('li');
+          li.textContent = p.title || p.name || JSON.stringify(p);
+          ul.appendChild(li);
+        });
+        list.innerHTML = '';
+        list.appendChild(ul);
+      })
+      .catch(() => {
+        document.getElementById('ledger-list').textContent = 'Could not load ledger.';
+      });
+  </script>
 
-const revObs=new IntersectionObserver((entries)=>{
-  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');revObs.unobserve(e.target);}});
-},{threshold:.1});
-document.querySelectorAll('.app-card,.sample-row,.ledger-entry,.protocol-step').forEach(el=>{
-  el.classList.add('reveal');revObs.observe(el);
-});
-</script>
 </body>
 </html>

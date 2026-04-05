@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Web Agent — WombDAO</title>
+<meta name="description" content="Grounded AI research agent for ectogenesis. Query 156+ GEO datasets with inline citations.">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,700;0,900;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/styles.css">
+<style>
+.agent-shell{max-width:1200px;margin:0 auto;padding:2rem 2rem 4rem;position:relative;z-index:2}
+.agent-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem;flex-wrap:wrap;gap:1rem}
+.agent-head h1{font-family:'Fraunces',serif;font-weight:900;font-size:clamp(1.8rem,4vw,2.8rem);line-height:1;letter-spacing:-.02em}
+.agent-head h1 em{font-style:italic;color:var(--stain);font-weight:400}
+.agent-toggles{display:flex;gap:.6rem;align-items:center}
+.toggle{display:inline-flex;align-items:center;gap:.5rem;font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;padding:.5rem .8rem;border:1.5px solid var(--ink);background:var(--paper);cursor:pointer;transition:all .2s}
+.toggle.on{background:var(--stain);color:var(--paper);border-color:var(--stain)}
+.toggle:hover{transform:translate(-1px,-1px);box-shadow:2px 2px 0 var(--ink)}
+.agent-grid{display:grid;grid-template-columns:1fr 320px;gap:1.5rem}
+@media (max-width:900px){.agent-grid{grid-template-columns:1fr}}
+.chat-panel{border:1.5px solid var(--ink);background:rgba(255,255,255,.4);display:flex;flex-direction:column;min-height:600px;max-height:75vh}
+.chat-log{flex:1;overflow-y:auto;padding:1.5rem}
+.msg{margin-bottom:1.5rem;font-family:'Fraunces',serif;font-size:1rem;line-height:1.55}
+.msg .who{font-family:'JetBrains Mono',monospace;font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;color:var(--ink-light);margin-bottom:.4rem}
+.msg.user .who{color:var(--cyan)}
+.msg.agent .who{color:var(--stain)}
+.msg .text{color:var(--ink);white-space:pre-wrap}
+.msg .citations{margin-top:.8rem;padding-top:.6rem;border-top:1px dotted var(--rule);font-family:'JetBrains Mono',monospace;font-size:.72rem;display:flex;gap:.4rem;flex-wrap:wrap}
+.msg .citations a{background:rgba(199,62,58,.08);border:1px solid var(--stain);color:var(--stain);padding:.15rem .5rem;border-bottom:1px solid var(--stain);transition:all .15s}
+.msg .citations a:hover{background:var(--stain);color:var(--paper)}
+.chat-input{border-top:1.5px solid var(--ink);padding:1rem;display:flex;gap:.6rem;background:var(--paper)}
+.chat-input input{flex:1;border:1px solid var(--rule);padding:.8rem 1rem;font-family:'Fraunces',serif;font-size:1rem;background:#fff;outline:none}
+.chat-input input:focus{border-color:var(--stain)}
+.chat-input button{border:1.5px solid var(--ink);background:var(--ink);color:var(--paper);padding:.8rem 1.4rem;font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:all .15s}
+.chat-input button:hover:not(:disabled){background:var(--stain);border-color:var(--stain)}
+.chat-input button:disabled{opacity:.4;cursor:not-allowed}
+.empty{text-align:center;color:var(--ink-light);font-style:italic;padding:3rem 1rem}
+.empty h3{font-family:'Fraunces',serif;font-size:1.3rem;margin-bottom:.5rem;color:var(--ink);font-style:italic}
+.suggestions{display:flex;flex-direction:column;gap:.5rem;margin-top:1.5rem;max-width:500px;margin-left:auto;margin-right:auto;text-align:left}
+.suggestion{padding:.7rem .9rem;border:1px solid var(--rule);background:#fff;cursor:pointer;font-family:'Fraunces',serif;font-size:.9rem;font-style:italic;color:var(--ink-soft);transition:all .15s}
+.suggestion:hover{border-color:var(--stain);color:var(--ink);background:rgba(199,62,58,.03)}
+.side-panel{display:flex;flex-direction:column;gap:1.5rem}
+.side-card{border:1.5px solid var(--ink);padding:1.2rem;background:rgba(255,255,255,.4)}
+.side-card h4{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;color:var(--stain);margin-bottom:.8rem}
+.side-card p{font-family:'Fraunces',serif;font-size:.92rem;color:var(--ink-soft);line-height:1.5;margin-bottom:.8rem}
+.side-card button{width:100%;border:1px solid var(--ink);background:transparent;padding:.6rem;font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:all .15s}
+.side-card button:hover{background:var(--ink);color:var(--paper)}
+.export-row{display:flex;gap:.4rem}
+.export-row button{flex:1}
+.json-view{background:var(--ink);color:var(--paper);padding:1rem;font-family:'JetBrains Mono',monospace;font-size:.7rem;line-height:1.5;overflow-x:auto;white-space:pre;max-height:400px;overflow-y:auto}
+.typing{display:inline-flex;gap:.3rem;align-items:center}
+.typing span{width:6px;height:6px;background:var(--stain);border-radius:50%;animation:bounce 1.4s infinite ease-in-out}
+.typing span:nth-child(2){animation-delay:.2s}
+.typing span:nth-child(3){animation-delay:.4s}
+@keyframes bounce{0%,80%,100%{transform:scale(.5);opacity:.5}40%{transform:scale(1);opacity:1}}
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="mast-left"><div class="mast-title"><a href="/">WombDAO</a></div></div>
+  <nav class="mast-nav">
+    <a href="/agent" class="active">Agent</a><a href="/docs">API Docs</a><a href="/">Datasets</a><a href="/connect">Connect</a><a href="/for-agents">For Agents</a>
+  </nav>
+</header>
+
+<main class="agent-shell">
+  <div class="agent-head">
+    <h1>Reading-room <em>agent</em></h1>
+    <div class="agent-toggles">
+      <button class="toggle" id="agentMode">Agent Mode: Off</button>
+      <a href="/docs" class="toggle" style="text-decoration:none;color:var(--ink);display:inline-flex">API ↗</a>
+    </div>
+  </div>
+
+  <div class="agent-grid">
+    <div class="chat-panel">
+      <div class="chat-log" id="chatLog">
+        <div class="empty">
+          <h3>Ask the archive anything.</h3>
+          <p>Grounded in 156 GEO datasets. Every answer ships with citations.</p>
+          <div class="suggestions">
+            <div class="suggestion" data-q="When does NANOG expression peak during preimplantation development?">When does NANOG expression peak during preimplantation development?</div>
+            <div class="suggestion" data-q="Compare single-cell vs bulk RNA-seq datasets for human blastocysts">Compare single-cell vs bulk RNA-seq datasets for human blastocysts</div>
+            <div class="suggestion" data-q="What methylation datasets are available for lineage specification?">What methylation datasets are available for lineage specification?</div>
+            <div class="suggestion" data-q="Which datasets cover extended embryo culture beyond implantation?">Which datasets cover extended embryo culture beyond implantation?</div>
+          </div>
+        </div>
+      </div>
+      <form class="chat-input" id="chatForm">
+        <input type="text" id="chatInput" placeholder="Ask about embryos, RNA-seq, methylation, ectogenesis…" autocomplete="off">
+        <button type="submit" id="sendBtn">Send</button>
+      </form>
+    </div>
+
+    <aside class="side-panel">
+      <div class="side-card">
+        <h4>Session</h4>
+        <p id="sessionInfo">No messages yet.</p>
+        <button id="clearBtn">Clear Session</button>
+      </div>
+      <div class="side-card">
+        <h4>Export</h4>
+        <p>Download this conversation with citations.</p>
+        <div class="export-row">
+          <button id="exportMd">Markdown</button>
+          <button id="exportJson">JSON</button>
+        </div>
+      </div>
+      <div class="side-card">
+        <h4>Contribute</h4>
+        <p>Propose a new dataset or flag a finding to the public ledger.</p>
+        <button id="proposeBtn">Propose to Ledger</button>
+      </div>
+    </aside>
+  </div>
+</main>
+
+<footer class="colophon">
+  <div class="colophon-inner">
+    <div class="colophon-badges">
+      <span class="colophon-badge">Agent-Friendly</span><span class="colophon-badge">No Extension Required</span><span class="colophon-badge">Public API</span><span class="colophon-badge">Open Ledger</span>
+    </div>
+    <div class="colophon-bottom">
+      <span>© MMXXVI · WombDAO</span>
+      <span><a href="/">Home</a> · <a href="/docs">API</a> · <a href="/for-agents">For Agents</a></span>
+    </div>
+  </div>
+</footer>
+
+<script src="/assets/agent.js"></script>
+</body>
+</html>
