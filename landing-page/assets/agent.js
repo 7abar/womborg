@@ -73,7 +73,7 @@ async function send(message) {
     document.getElementById('typing')?.remove();
 
     if (!data.success) {
-      renderMessage('agent', `Error: ${data.error || 'unknown'}`);
+      renderMessage('agent', `Error: ${data.error || 'unknown'}${data.details ? '\n\n' + data.details : ''}`);
       return;
     }
     history.push({ role: 'assistant', content: data.reply, citations: data.citations });
