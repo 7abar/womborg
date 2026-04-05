@@ -8,18 +8,13 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Lazy-load node-fetch (ESM-only in v3, use dynamic import)
 async function fetchJSON(url, opts = {}) {
   const { default: fetch } = await import('node-fetch');
   return fetch(url, opts);
 }
 
-// --- Security Middleware ---
-app.use(helmet({
-  contentSecurityPolicy: false, // allow inline scripts in landing page
-}));
+app.use(helmet({ contentSecurityPolicy: false }));
 
-// --- CORS ---
 const allowedOrigins = (process.env.ALLOWED_ORIGINS || '')
   .split(',')
   .map(o => o.trim())
@@ -41,9 +36,8 @@ app.use(cors({
   credentials: true,
 }));
 
-// --- Rate Limiting ---
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
+  windowMs: 15 * 60 * 1000,
   max: 100,
   standardHeaders: true,
   legacyHeaders: false,
@@ -51,48 +45,44 @@ const limiter = rateLimit({
 });
 app.use('/api', limiter);
 
-// --- Body Parsing ---
 app.use(express.json({ limit: '1mb' }));
 
-// --- Static Landing Page ---
-// Serve from landing-page/ folder (one level up from server/)
 const landingDir = path.join(__dirname, '..', 'landing-page');
 app.use(express.static(landingDir));
 
-// --- Data ---
 const PROPOSALS = [
   {
     id: 1,
     title: 'Fund Artificial Placenta Research at MIT',
-    description: "Allocate 50,000 $WOMB tokens to fund Dr. Chen's artificial placenta vasculature study. This research will advance nutrient delivery systems for ectogenesis devices.",
+    description: "Allocate community research credits to Dr. Chen's artificial placenta vasculature study. This research will advance nutrient delivery systems for ectogenesis devices.",
     status: 'active',
-    votesFor: 12400,
-    votesAgainst: 3200,
-    totalVotes: 15600,
+    votesFor: 1240,
+    votesAgainst: 320,
+    totalVotes: 1560,
     deadline: '2026-04-20',
-    proposer: '0x1234...abcd',
+    proposer: 'contributor-0472',
   },
   {
     id: 2,
     title: 'Integrate GSE101571 Dataset into WombDAO Agent',
     description: 'Add the human blastocyst single-cell RNA-seq dataset (GSE101571) to the AI agent knowledge base for improved embryo development analysis.',
     status: 'active',
-    votesFor: 8900,
-    votesAgainst: 1100,
-    totalVotes: 10000,
+    votesFor: 890,
+    votesAgainst: 110,
+    totalVotes: 1000,
     deadline: '2026-04-25',
-    proposer: '0x5678...efgh',
+    proposer: 'contributor-0891',
   },
   {
     id: 3,
-    title: 'Launch $WOMB Token on Base Mainnet',
-    description: 'Deploy ERC-20 $WOMB governance token on Base chain with initial distribution to early contributors and research participants.',
+    title: 'Establish Public Archive and Review Process',
+    description: 'Formalize the public ledger, reviewer eligibility, and citation standards. Every dataset, finding, and decision is filed in public.',
     status: 'passed',
-    votesFor: 22100,
-    votesAgainst: 900,
-    totalVotes: 23000,
+    votesFor: 2210,
+    votesAgainst: 90,
+    totalVotes: 2300,
     deadline: '2026-03-15',
-    proposer: '0x9abc...ijkl',
+    proposer: 'contributor-0001',
   },
 ];
 
@@ -129,24 +119,18 @@ const FEATURED_DATASETS = [
   },
 ];
 
-// --- Routes ---
-
-// Health check
 app.get('/health', (req, res) => {
-  res.json({ status: 'ok', version: '0.1.0', chain: 'base' });
+  res.json({ status: 'ok', version: '0.1.0' });
 });
 
-// DAO Proposals
 app.get('/api/proposals', (req, res) => {
   res.json({ success: true, data: PROPOSALS });
 });
 
-// Featured Datasets
 app.get('/api/datasets/featured', (req, res) => {
   res.json({ success: true, data: FEATURED_DATASETS });
 });
 
-// Stats
 app.get('/api/stats', (req, res) => {
   res.json({
     success: true,
@@ -154,13 +138,11 @@ app.get('/api/stats', (req, res) => {
       agents: 42,
       datasets: 156,
       proposals: PROPOSALS.length,
-      chainId: 8453,
-      chainName: 'Base',
+      members: 2341,
     },
   });
 });
 
-// NCBI Search Proxy (avoid CORS)
 app.get('/api/ncbi/search', async (req, res) => {
   const { q, db = 'gds', retmax = 10 } = req.query;
   if (!q) return res.status(400).json({ error: 'Missing query parameter: q' });
@@ -178,7 +160,6 @@ app.get('/api/ncbi/search', async (req, res) => {
   }
 });
 
-// AI Chat Proxy (OpenRouter)
 app.post('/api/chat', async (req, res) => {
   const apiKey = process.env.OPENROUTER_API_KEY;
   if (!apiKey) {
@@ -222,14 +203,11 @@ app.post('/api/chat', async (req, res) => {
   }
 });
 
-// Fallback: serve index.html for any unknown route (SPA support)
 app.get('*', (req, res) => {
   res.sendFile(path.join(landingDir, 'index.html'));
 });
 
-// --- Start ---
 app.listen(PORT, () => {
   console.log(`\u{1F9EC} WombDAO server running on port ${PORT}`);
   console.log(`   Landing page: ${landingDir}`);
-  console.log(`   Chain: Base (chainId 8453)`);
 });
