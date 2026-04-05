@@ -100,7 +100,8 @@ app.post('/api/chat', async (req, res) => {
     });
     if (!response.ok) {
       const text = await response.text();
-      return res.status(response.status).json({ error: 'OpenRouter error', details: text });
+      console.error('OpenRouter error:', response.status, text);
+      return res.status(502).json({ error: 'OpenRouter error', details: text, hint: 'Check OPENROUTER_API_KEY env var and model availability' });
     }
     const data = await response.json();
     const reply = data.choices?.[0]?.message?.content || '';
