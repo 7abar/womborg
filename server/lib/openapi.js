@@ -57,7 +57,7 @@ module.exports = {
             required: ['messages'],
             properties: {
               messages: { type: 'array', items: { type: 'object', properties: { role: { type: 'string', enum: ['user','assistant','system'] }, content: { type: 'string' } } } },
-              model: { type: 'string', default: 'meta-llama/llama-3.1-8b-instruct:free' },
+              model: { type: 'string', default: 'openrouter/auto' },
               agent_mode: { type: 'boolean', default: false, description: 'Return structured JSON output for agent consumption' }
             }
           } } }
