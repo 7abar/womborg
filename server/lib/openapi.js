@@ -57,7 +57,7 @@ module.exports = {
             required: ['messages'],
             properties: {
               messages: { type: 'array', items: { type: 'object', properties: { role: { type: 'string', enum: ['user','assistant','system'] }, content: { type: 'string' } } } },
-              model: { type: 'string', default: 'openrouter/auto' },
+              model: { type: 'string', default: 'openrouter/auto:free' },
               agent_mode: { type: 'boolean', default: false, description: 'Return structured JSON output for agent consumption' }
             }
           } } }

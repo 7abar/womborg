@@ -50,6 +50,20 @@
   </script>
 
   <style>
+    /* ——— Event Banner ——— */
+    .event-banner{position:relative;z-index:3;display:flex;align-items:center;justify-content:center;padding:.85rem 2rem;background:linear-gradient(135deg,#1a1816 0%,#2a1a18 50%,#1a1816 100%);color:var(--paper);text-decoration:none;border:none;border-bottom:2px solid var(--stain);overflow:hidden;cursor:pointer;transition:all .3s}
+    .event-banner:hover{background:linear-gradient(135deg,#2a1a18 0%,#3a2a28 50%,#2a1a18 100%)}
+    .event-banner-glow{position:absolute;top:-50%;left:-10%;width:120%;height:200%;background:radial-gradient(ellipse at center,rgba(199,62,58,.15) 0%,transparent 60%);animation:banner-pulse 3s ease-in-out infinite;pointer-events:none}
+    @keyframes banner-pulse{0%,100%{opacity:.5;transform:scale(1)}50%{opacity:1;transform:scale(1.05)}}
+    .event-banner-inner{display:flex;align-items:center;gap:1.2rem;position:relative;z-index:1;flex-wrap:wrap;justify-content:center}
+    .event-badge{font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;background:var(--stain);color:var(--paper);padding:.3rem .6rem;animation:badge-blink 2s ease-in-out infinite}
+    @keyframes badge-blink{0%,100%{opacity:1}50%{opacity:.7}}
+    .event-text{font-family:'Fraunces',serif;font-size:.95rem;color:rgba(244,241,234,.85)}
+    .event-text strong{color:var(--paper);font-weight:700}
+    .event-cta{font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--stain);display:inline-flex;align-items:center;gap:.3rem;border:1px solid var(--stain);padding:.3rem .7rem;transition:all .2s}
+    .event-banner:hover .event-cta{background:var(--stain);color:var(--paper)}
+    @media (max-width:700px){.event-text{font-size:.82rem}.event-cta{display:none}}
+
     /* ——— Hero ——— */
     .hero {
       padding: 6rem 2rem 4rem;
@@ -392,6 +406,16 @@
       <a href="/for-agents">For Agents</a>
     </nav>
   </header>
+
+  <!-- ——— Event Banner ——— -->
+  <a href="/mint" class="event-banner">
+    <div class="event-banner-glow"></div>
+    <div class="event-banner-inner">
+      <span class="event-badge">LIVE EVENT</span>
+      <span class="event-text">Mint Your <strong>Genesis NFT</strong> — Follow <strong>@womb_dao</strong> on X to Claim</span>
+      <span class="event-cta">Mint Now <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="9 18 15 12 9 6"/></svg></span>
+    </div>
+  </a>
 
   <!-- ——— Hero ——— -->
   <section class="hero">
